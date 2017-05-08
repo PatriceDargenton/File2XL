@@ -14,7 +14,7 @@ Public Const iBigFileSizeMb% = 10 * 1024 * 1024 ' 10 Mb
 
 Public Class clsLineEventArgs : Inherits EventArgs
     Private m_sLine$ = ""
-    Public Sub New(ByVal sLine$)
+    Public Sub New(sLine$)
         If String.IsNullOrEmpty(sLine) Then sLine = ""
         Me.m_sLine = sLine
     End Sub
@@ -30,7 +30,7 @@ Public Class clsSplitLineEventArgs : Inherits EventArgs
     Public m_asFields$()
     Public m_iNbColumns% = 0
 
-    Public Sub New(ByVal sLine$, sFieldDelimiter$, bQuotesDelimiter As Boolean)
+    Public Sub New(sLine$, sFieldDelimiter$, bQuotesDelimiter As Boolean)
 
         ' This constructor works only using "," or ";"
 
@@ -56,18 +56,18 @@ End Class
 
 Public Class clsDelegLine
 
-    Public Delegate Sub EvHandlerLine(ByVal sender As Object, ByVal e As clsLineEventArgs)
+    Public Delegate Sub EvHandlerLine(sender As Object, e As clsLineEventArgs)
     Public Event EvNewLine As EvHandlerLine
 
-    Public Delegate Sub EvHandlerSplitLine(ByVal sender As Object, ByVal e As clsSplitLineEventArgs)
+    Public Delegate Sub EvHandlerSplitLine(sender As Object, e As clsSplitLineEventArgs)
     Public Event EvNewSplitLine As EvHandlerSplitLine
 
-    Public Sub NewLine(ByVal sLine$)
+    Public Sub NewLine(sLine$)
         Dim e As New clsLineEventArgs(sLine)
         RaiseEvent EvNewLine(Me, e)
     End Sub
 
-    Public Sub NewSplitLine(ByVal sLine$, sFieldDelimiter$, bQuotesDelimiter As Boolean, ByRef iNbColumns%)
+    Public Sub NewSplitLine(sLine$, sFieldDelimiter$, bQuotesDelimiter As Boolean, ByRef iNbColumns%)
         Dim e As New clsSplitLineEventArgs(sLine, sFieldDelimiter, bQuotesDelimiter)
         RaiseEvent EvNewSplitLine(Me, e)
         iNbColumns = e.m_iNbColumns
@@ -138,50 +138,52 @@ Public Function bReadFileGeneric(sFieldDelimiter$, bHeader As Boolean, _
     If bLineByLine OrElse bOnlyFirstLines OrElse bOnlyFirstSplitLines Then
 
         ' Read line by line
+        Dim fs As FileStream = Nothing
         Try
             Dim lFileSize& = New IO.FileInfo(sPath).Length
             Dim share As IO.FileShare = IO.FileShare.ReadWrite
-            Using fs As New IO.FileStream(sPath, IO.FileMode.Open, IO.FileAccess.Read, share)
+            fs = New IO.FileStream(sPath, IO.FileMode.Open, IO.FileAccess.Read, share)
             Using sr As New IO.StreamReader(fs, encod)
-            Do
-                Dim sLine$ = sr.ReadLine()
-                iNumLine += 1
+                fs = Nothing
+                Do
+                    Dim sLine$ = sr.ReadLine()
+                    iNumLine += 1
 
-                If bOnlyFirstLines Then
-                    If iNumLine > iNbLinesAnalyzed Then Return True
+                    If bOnlyFirstLines Then
+                        If iNumLine > iNbLinesAnalyzed Then Return True
+                        If IsNothing(sLine) Then Continue Do
+                        lineDeleg.NewLine(sLine)
+                        Continue Do
+                    End If
+
+                    If bHeader AndAlso Not bOnlyFirstLines AndAlso iNumLine = 1 Then Continue Do ' Header
+
+                    If msgDeleg.m_bIgnoreNextLines Then Exit Do
                     If IsNothing(sLine) Then Continue Do
-                    lineDeleg.NewLine(sLine)
-                    Continue Do
-                End If
 
-                If bHeader AndAlso Not bOnlyFirstLines AndAlso iNumLine = 1 Then Continue Do ' Header
+                    Dim iNbColumns0% = 0
+                    lineDeleg.NewSplitLine(sLine, sFieldDelimiter, bQuotesDelimiter, iNbColumns0)
+                    If iNbColumns0 > iNbColumns Then iNbColumns = iNbColumns0
 
-                If msgDeleg.m_bIgnoreNextLines Then Exit Do
-                If IsNothing(sLine) Then Continue Do
+                    If bOnlyFirstSplitLines Then
+                        If iNumLine > iNbLinesAnalyzed Then Return True
+                        Continue Do
+                    End If
 
-                Dim iNbColumns0% = 0
-                lineDeleg.NewSplitLine(sLine, sFieldDelimiter, bQuotesDelimiter, iNbColumns0)
-                If iNbColumns0 > iNbColumns Then iNbColumns = iNbColumns0
+                    If iNumLine Mod iDisplayRate0 = 0 Then
+                        Dim lFilePos& = fs.Position
+                        Dim rPC! = 100 * CSng(lFilePos / lFileSize)
+                        Dim sPC$ = iNumLine & " (" & rPC.ToString("0.00") & " %)..."
+                        Dim sMsg$ = sFile & " lines : " & sPC
+                        Dim sLongMsg$ = sPC & vbLf & sPath & vbLf & sRAMInfo()
+                        msgDeleg.ShowMsg("Loading : " & sMsg)
+                        msgDeleg.ShowLongMsg("Loading : " & sLongMsg)
+                        WaitPause(msgDeleg, "Paused : " & sMsg, "Paused : " & sLongMsg)
+                        If msgDeleg.m_bCancel Then Return False
+                    End If
 
-                If bOnlyFirstSplitLines Then
-                    If iNumLine > iNbLinesAnalyzed Then Return True
-                    Continue Do
-                End If
-
-                If iNumLine Mod iDisplayRate0 = 0 Then
-                    Dim lFilePos& = fs.Position
-                    Dim rPC! = 100 * CSng(lFilePos / lFileSize)
-                    Dim sPC$ = iNumLine & " (" & rPC.ToString("0.00") & " %)..."
-                    Dim sMsg$ = sFile & " lines : " & sPC
-                    Dim sLongMsg$ = sPC & vbLf & sPath & vbLf & sRAMInfo()
-                    msgDeleg.ShowMsg("Loading : " & sMsg)
-                    msgDeleg.ShowLongMsg("Loading : " & sLongMsg)
-                    WaitPause(msgDeleg, "Paused : " & sMsg, "Paused : " & sLongMsg)
-                    If msgDeleg.m_bCancel Then Return False
-                End If
-
-            Loop While Not sr.EndOfStream
-            End Using : End Using
+                Loop While Not sr.EndOfStream
+            End Using
             If Not msgDeleg.m_bIgnoreNextLines Then
                 iNbLines = iNumLine
                 Dim sPC1$ = iNumLine & " (" & (100).ToString("0.00") & " %)"
@@ -191,8 +193,10 @@ Public Function bReadFileGeneric(sFieldDelimiter$, bHeader As Boolean, _
                 msgDeleg.ShowLongMsg(sLongMsg)
             End If
         Catch ex As Exception
-            Throw ex
+            Throw
             Return False
+        Finally
+            If Not IsNothing(fs) Then fs.Dispose()
         End Try
 
     Else

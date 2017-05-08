@@ -2,7 +2,16 @@
 ' File clsSortDic.vb : Sortable dictionary class
 ' ------------------
 
+Imports System.Runtime.Serialization
+
+<Serializable> _
 Public Class SortDic(Of TKey, TValue) : Inherits Dictionary(Of TKey, TValue)
+
+Sub New()
+End Sub
+Protected Sub New(info As SerializationInfo, context As StreamingContext)
+    MyBase.New(info, context)
+End Sub
 
 Public Function Sort(Optional sSorting$ = "") As TValue()
 

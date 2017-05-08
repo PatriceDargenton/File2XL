@@ -24,13 +24,14 @@ Public Class clsPrm
     Public bCreateStandardSheet As Boolean
     Public bPreferMultipleDelimiter As Boolean ' For example, prefer "," to ,
     Public bAutosizeColumns As Boolean
+    Public bRemoveNULL As Boolean ' Replace PhpMyAdmin NULL by empty
 
 End Class
 
 Public Class clsFile2XL
 
 Public m_bXlsx As Boolean = False
-Public m_sPathDestXls$, m_sPathDestXlsx$
+Public m_sDestPathXls$, m_sDestPathXlsx$
 Public m_bOnlyTextFields As Boolean = True ' Check if there are only text fields or not, and store them here
 
 Public Const iNbCarMaxCell% = 32767
@@ -81,8 +82,8 @@ Public Function bRead(prm As clsPrm, sPath$, delegMsg As clsDelegMsg) As Boolean
     m_delegMsg.m_bIgnoreNextLines = False
     m_delegMsg.m_bCancel = False
 
-    If Not bFileIsWritable(m_sPathDestXls, bNonExistentOk:=True, bPromptRetry:=True) Then Return False
-    If Not bFileIsWritable(m_sPathDestXlsx, bNonExistentOk:=True, bPromptRetry:=True) Then Return False
+    If Not bFileIsWritable(m_sDestPathXls, bNonExistentOk:=True, bPromptRetry:=True) Then Return False
+    If Not bFileIsWritable(m_sDestPathXlsx, bNonExistentOk:=True, bPromptRetry:=True) Then Return False
 
     Dim encod = GetEncoding(sPath)
     ' If encoding is ASCII, set the Latin alphabet to preserve for example accents
@@ -187,9 +188,9 @@ Public Function bWrite() As Boolean
     m_delegMsg.ShowMsg("Checking Excel file...")
     Dim iNumColMax% = m_iNbFilledColMaxFound - 1
     If m_bXlsx Then
-        sPath = m_sPathDestXlsx
+        sPath = m_sDestPathXlsx
     ElseIf m_prm.bUseXls Then
-        sPath = m_sPathDestXls
+        sPath = m_sDestPathXls
     End If
     If Not bFileIsWritable(sPath, bNonExistentOk:=True, bPromptRetry:=True) Then Return False
 
@@ -382,7 +383,7 @@ Private Sub UpdateMsg()
 
 End Sub
 
-Private Sub NewSplitLine(ByVal sender As Object, ByVal e As clsSplitLineEventArgs) _
+Private Sub NewSplitLine(sender As Object, e As clsSplitLineEventArgs) _
     Handles m_lineDeleg.EvNewSplitLine
 
     If m_bDetectColumnType Then
@@ -488,9 +489,15 @@ Private Sub WriteRow(row As IRow, asFields$(), iNbColMaxExcel%, bExcel2007 As Bo
             End If
             Exit For
         End If
+
         row.CreateCell(iNumField)
+
+        ' Remove NULL value only for the Standard sheet (bConv = True), not for the Text sheet (bConv = False)
+        If m_prm.bRemoveNULL AndAlso bConv AndAlso sField = sNULL Then sField = "" ' 28/04/2017
+
         Dim bValue As Boolean = False
         If sField.Length > 0 Then bValue = True
+
         If bValue Then
 
             If bConv AndAlso iNumField < m_lstFields.Count Then
@@ -553,7 +560,7 @@ Private Sub WriteRow(row As IRow, asFields$(), iNbColMaxExcel%, bExcel2007 As Bo
 
 End Sub
 
-Private Sub NewLine(ByVal sender As Object, ByVal e As clsLineEventArgs) Handles m_lineDeleg.EvNewLine
+Private Sub NewLine(sender As Object, e As clsLineEventArgs) Handles m_lineDeleg.EvNewLine
     m_lines.Add(e.sLine)
 End Sub
 
@@ -636,16 +643,17 @@ Private Sub FindProbDelimiter(sDelimiterList$, sDefaultDelimiter$, ByRef sFieldD
 
     Dim acDelimiters = sDelimiterList.ToCharArray
 
-    Dim dicoStat As New SortDic(Of String, clsOcc)
+    Dim dicStat As New SortDic(Of String, clsOcc)
     For Each c In acDelimiters
         Dim s$ = c
-        dicoStat.Add(s, New clsOcc(s, 0, m_prm.bPreferMultipleDelimiter)) ' Count succes
+        dicStat.Add(s, New clsOcc(s, 0, m_prm.bPreferMultipleDelimiter)) ' Count succes
     Next
     ' Count also "," and ";" if required
-    If m_prm.bUseQuotesCommaQuotesDelimiter Then
-        dicoStat.Add(sQuotesCommaQuotesDelimiter, _
+    ' 16/04/2017 AndAlso m_prm.bPreferMultipleDelimiter
+    If m_prm.bUseQuotesCommaQuotesDelimiter AndAlso m_prm.bPreferMultipleDelimiter Then
+        dicStat.Add(sQuotesCommaQuotesDelimiter, _
             New clsOcc(sQuotesCommaQuotesDelimiter, 0, m_prm.bPreferMultipleDelimiter))
-        dicoStat.Add(sQuotesSemiColonQuotesDelimiter, _
+        dicStat.Add(sQuotesSemiColonQuotesDelimiter, _
             New clsOcc(sQuotesSemiColonQuotesDelimiter, 0, m_prm.bPreferMultipleDelimiter))
     End If
 
@@ -653,31 +661,32 @@ Private Sub FindProbDelimiter(sDelimiterList$, sDefaultDelimiter$, ByRef sFieldD
     Dim iNumLine% = 0
     For Each sLine In m_lines
         iNumLine += 1
-        Dim dico As New SortDic(Of String, clsOcc)
+        Dim dic As New SortDic(Of String, clsOcc)
         For Each c In acDelimiters
             Dim s$ = c
             Dim iNbOcc% = iNbOccurrences(sLine, s)
-            If dico.ContainsKey(s) Then Continue For
-            dico.Add(s, New clsOcc(s, iNbOcc, m_prm.bPreferMultipleDelimiter))
+            If dic.ContainsKey(s) Then Continue For
+            dic.Add(s, New clsOcc(s, iNbOcc, m_prm.bPreferMultipleDelimiter))
         Next
-        If m_prm.bUseQuotesCommaQuotesDelimiter Then
+        ' 16/04/2017 AndAlso m_prm.bPreferMultipleDelimiter
+        If m_prm.bUseQuotesCommaQuotesDelimiter AndAlso m_prm.bPreferMultipleDelimiter Then
             Dim iNbOcc% = iNbOccurrences(sLine, sQuotesCommaQuotesDelimiter)
-            If Not dico.ContainsKey(sQuotesCommaQuotesDelimiter) Then
-                dico.Add(sQuotesCommaQuotesDelimiter, _
+            If Not dic.ContainsKey(sQuotesCommaQuotesDelimiter) Then
+                dic.Add(sQuotesCommaQuotesDelimiter, _
                     New clsOcc(sQuotesCommaQuotesDelimiter, iNbOcc, m_prm.bPreferMultipleDelimiter))
             End If
             Dim iNbOcc2% = iNbOccurrences(sLine, sQuotesSemiColonQuotesDelimiter)
-            If Not dico.ContainsKey(sQuotesSemiColonQuotesDelimiter) Then
-                dico.Add(sQuotesSemiColonQuotesDelimiter, _
+            If Not dic.ContainsKey(sQuotesSemiColonQuotesDelimiter) Then
+                dic.Add(sQuotesSemiColonQuotesDelimiter, _
                     New clsOcc(sQuotesSemiColonQuotesDelimiter, iNbOcc2, m_prm.bPreferMultipleDelimiter))
             End If
         End If
         If bDebugSort Then Debug.WriteLine("Result line n°" & iNumLine & " :")
         Dim iNumSep% = 0
         ' First sort by number of occurrences, then by occurrence length, so that "," can win against ,
-        For Each occ In dico.Sort(sSorting)
+        For Each occ In dic.Sort(sSorting)
             If bDebugSort Then Debug.WriteLine(occ.s & "=" & occ.iNbOcc & " (" & occ.iOccLength & " car.)")
-            If iNumSep = 0 AndAlso occ.iNbOcc > 0 Then dicoStat(occ.s).iNbOcc += 1
+            If iNumSep = 0 AndAlso occ.iNbOcc > 0 Then dicStat(occ.s).iNbOcc += 1
             iNumSep += 1
         Next
     Next
@@ -690,7 +699,7 @@ Private Sub FindProbDelimiter(sDelimiterList$, sDefaultDelimiter$, ByRef sFieldD
 
     Dim sProb$ = String.Empty
     Dim iNumSep2% = 0
-    For Each occ In dicoStat.Sort(sSorting)
+    For Each occ In dicStat.Sort(sSorting)
         If bDebugSort Then Debug.WriteLine(occ.s & "=" & occ.iNbOcc & " wins / " & m_lines.Count)
         If iNumSep2 = 0 AndAlso occ.iNbOcc > 0 Then sProb = occ.s ' Keep the winner
         iNumSep2 += 1
@@ -746,6 +755,11 @@ Private Sub FindColumnsType(ByRef lstFields As List(Of clsField), ByRef bOnlyTex
         Dim iNumField% = 0
         For Each sField In sLine
 
+            ' 28/04/2017
+            If m_prm.bRemoveNULL AndAlso sField = sNULL Then
+                Continue For ' Do not count null value
+            End If
+
             Dim sFieldMinus = ""
             Dim sFieldTrim$ = sField.Trim
             Dim bEndWithMinus As Boolean = False
@@ -754,11 +768,11 @@ Private Sub FindColumnsType(ByRef lstFields As List(Of clsField), ByRef bOnlyTex
                 sFieldMinus = sFieldTrim.Substring(0, sFieldTrim.Length - 1)
             End If
 
-            Dim dico As SortDic(Of String, clsField)
+            Dim dic As SortDic(Of String, clsField)
             Dim sFieldName$ = ""
             If iNumLine = 0 OrElse iNumField >= lstFields0.Count Then
-                dico = New SortDic(Of String, clsField)
-                lstFields0.Add(dico)
+                dic = New SortDic(Of String, clsField)
+                lstFields0.Add(dic)
 
                 If iNumLine = 0 Then sFieldName = sField
                 If sFieldName.Trim.Length = 0 Then sFieldName = "Field n°" & iNumField + 1
@@ -766,7 +780,7 @@ Private Sub FindColumnsType(ByRef lstFields As List(Of clsField), ByRef bOnlyTex
                 lstMinusExistsForFields.Add(bEndWithMinus)
 
             Else
-                dico = lstFields0(iNumField)
+                dic = lstFields0(iNumField)
                 sFieldName = lstNameOfFields(iNumField)
 
                 Dim bEndWithMinus0 = lstMinusExistsForFields(iNumField)
@@ -776,21 +790,21 @@ Private Sub FindColumnsType(ByRef lstFields As List(Of clsField), ByRef bOnlyTex
             End If
 
             If IsNumeric(sField) Then
-                AddField(dico, iNumField, sFieldName, clsFieldType.sNumeric)
+                AddField(dic, iNumField, sFieldName, clsFieldType.sNumeric)
             ElseIf IsNumeric(sField.Replace(sPeriod, sComma)) Then
-                AddField(dico, iNumField, sFieldName, clsFieldType.sNumericP2C)
+                AddField(dic, iNumField, sFieldName, clsFieldType.sNumericP2C)
             ElseIf IsNumeric(sField.Replace(sComma, sPeriod)) Then
-                AddField(dico, iNumField, sFieldName, clsFieldType.sNumericC2P)
+                AddField(dic, iNumField, sFieldName, clsFieldType.sNumericC2P)
             ElseIf IsNumeric(sField.Replace(sQuotes, sEmpty)) Then
-                AddField(dico, iNumField, sFieldName, clsFieldType.sNumericWithQuotes)
+                AddField(dic, iNumField, sFieldName, clsFieldType.sNumericWithQuotes)
             ElseIf IsNumeric(sField.Replace(sPeriod, sComma).Replace(sQuotes, sEmpty)) Then
-                AddField(dico, iNumField, sFieldName, clsFieldType.sNumericP2CWithQuotes)
+                AddField(dic, iNumField, sFieldName, clsFieldType.sNumericP2CWithQuotes)
             ElseIf IsNumeric(sField.Replace(sComma, sPeriod).Replace(sQuotes, sEmpty)) Then
-                AddField(dico, iNumField, sFieldName, clsFieldType.sNumericC2PWithQuotes)
+                AddField(dic, iNumField, sFieldName, clsFieldType.sNumericC2PWithQuotes)
             ElseIf sField.Contains(sQuotes) Then
-                AddField(dico, iNumField, sFieldName, clsFieldType.sTextWithQuotes)
+                AddField(dic, iNumField, sFieldName, clsFieldType.sTextWithQuotes)
             Else
-                AddField(dico, iNumField, sFieldName, clsFieldType.sText)
+                AddField(dic, iNumField, sFieldName, clsFieldType.sText)
             End If
 
             If bDebugColType Then Debug.WriteLine(sFieldName & "=" & sField)
@@ -801,9 +815,9 @@ Private Sub FindColumnsType(ByRef lstFields As List(Of clsField), ByRef bOnlyTex
 
     lstFields = New List(Of clsField)
     Dim iNumField2% = 0
-    For Each dico In lstFields0
+    For Each dic In lstFields0
         Dim iNumSep2% = 0
-        For Each field In dico.Sort("iNbOcc DESC")
+        For Each field In dic.Sort("iNbOcc DESC")
             If bDebugColType Then Debug.WriteLine(field.iNumField & " : " & field.sField & _
                 ", " & field.sType & ", iNbOcc=" & field.iNbOcc)
             ' Keep the max.
@@ -824,13 +838,13 @@ Private Sub FindColumnsType(ByRef lstFields As List(Of clsField), ByRef bOnlyTex
 
 End Sub
 
-Private Sub AddField(dico As SortDic(Of String, clsField), iNumField%, sFieldName$, sFieldType$)
+Private Sub AddField(dic As SortDic(Of String, clsField), iNumField%, sFieldName$, sFieldType$)
 
-    If Not dico.ContainsKey(sFieldType) Then
+    If Not dic.ContainsKey(sFieldType) Then
         Dim field = New clsField(iNumField, sFieldName, sFieldType)
-        dico.Add(sFieldType, field)
+        dic.Add(sFieldType, field)
     Else
-        Dim field = dico(sFieldType)
+        Dim field = dic(sFieldType)
         field.iNbOcc += 1
     End If
 

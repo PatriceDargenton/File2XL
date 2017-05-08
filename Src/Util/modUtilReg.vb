@@ -16,9 +16,9 @@ Private Const sMsgErrPossibleCause$ = _
     "Possible cause : adding context menus requires administrator privileges" & vbCrLf & _
     "Run as admin. the application for this operation"
 
-Public Function bAddContextMenuFileType(ByVal sExtension$, ByVal sFileType$, _
-    Optional ByVal sExtensionDescription$ = "", _
-    Optional ByVal bRemove As Boolean = False) As Boolean
+Public Function bAddContextMenuFileType(sExtension$, sFileType$, _
+    Optional sExtensionDescription$ = "", _
+    Optional bRemove As Boolean = False) As Boolean
 
     ' Add (or Remove) in the registry a ClassesRoot file type
     '  to associate a file extension to a default application
@@ -50,14 +50,14 @@ Public Function bAddContextMenuFileType(ByVal sExtension$, ByVal sFileType$, _
 
 End Function
 
-Public Function bAddContextMenu(ByVal sFileType$, ByVal sCmd$, _
-    Optional ByVal bPrompt As Boolean = True, _
-    Optional ByVal bRemove As Boolean = False, _
-    Optional ByVal sCmdDescription$ = "", _
-    Optional ByVal sExePath$ = "", _
-    Optional ByVal sCmdDef$ = """%1""", _
-    Optional ByVal sFileTypeDescription$ = "", _
-    Optional ByVal bRemoveFileType As Boolean = False) As Boolean
+Public Function bAddContextMenu(sFileType$, sCmd$, _
+    Optional bPrompt As Boolean = True, _
+    Optional bRemove As Boolean = False, _
+    Optional sCmdDescription$ = "", _
+    Optional sExePath$ = "", _
+    Optional sCmdDef$ = """%1""", _
+    Optional sFileTypeDescription$ = "", _
+    Optional bRemoveFileType As Boolean = False) As Boolean
 
     ' Add (or Remove) in the registry a context menu for a ClassesRoot file type
     ' (see the previous function bAddContextMenuFileType)
@@ -145,7 +145,7 @@ Public Function bAddContextMenu(ByVal sFileType$, ByVal sCmd$, _
 
 End Function
 
-Public Function bClassesRootRegistryKeyExists(ByVal sKey$, Optional ByVal sSubKey$ = "") As Boolean
+Public Function bClassesRootRegistryKeyExists(sKey$, Optional sSubKey$ = "") As Boolean
 
     Try
         Using rkCRCle As RegistryKey = Registry.ClassesRoot.OpenSubKey(sKey & "\" & sSubKey)
@@ -158,7 +158,7 @@ Public Function bClassesRootRegistryKeyExists(ByVal sKey$, Optional ByVal sSubKe
 
 End Function
 
-Public Function bClassesRootRegistryKeyExists(ByVal sKey$, ByVal sSubKey$, ByRef sSubKeyValue$) As Boolean
+Public Function bClassesRootRegistryKeyExists(sKey$, sSubKey$, ByRef sSubKeyValue$) As Boolean
 
     sSubKeyValue = ""
     Try
@@ -177,8 +177,8 @@ Public Function bClassesRootRegistryKeyExists(ByVal sKey$, ByVal sSubKey$, ByRef
 
 End Function
 
-Public Function bLocalMachineRegistryKeyExists(ByVal sKey$, Optional ByVal sSubKey$ = "", _
-    Optional ByRef sSubKeyValue$ = "", Optional ByVal sNewSubKeyValue$ = "") As Boolean
+Public Function bLocalMachineRegistryKeyExists(sKey$, Optional sSubKey$ = "", _
+    Optional ByRef sSubKeyValue$ = "", Optional sNewSubKeyValue$ = "") As Boolean
 
     sSubKeyValue = ""
     Try
@@ -203,7 +203,7 @@ Public Function bLocalMachineRegistryKeyExists(ByVal sKey$, Optional ByVal sSubK
 
 End Function
 
-Public Function bCurrentUserRegistryKeyExists(ByVal sKey$, Optional ByVal sSubKey$ = "", _
+Public Function bCurrentUserRegistryKeyExists(sKey$, Optional sSubKey$ = "", _
     Optional ByRef sSubKeyValue$ = "") As Boolean
 
     sSubKeyValue = ""
@@ -222,7 +222,7 @@ Public Function bCurrentUserRegistryKeyExists(ByVal sKey$, Optional ByVal sSubKe
 
 End Function
 
-Public Function asCurrentUserRegistrySubKeys(ByVal sKey$) As String()
+Public Function asCurrentUserRegistrySubKeys(sKey$) As String()
 
     Try
         Using rkCUCle As RegistryKey = Registry.CurrentUser.OpenSubKey(sKey)

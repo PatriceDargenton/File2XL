@@ -27,9 +27,12 @@
       <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="NbLinesAnalyzed" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">50</Value>
+      <Value Profile="(Default)">100</Value>
     </Setting>
     <Setting Name="AutosizeColumns" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="RemoveNULL" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>

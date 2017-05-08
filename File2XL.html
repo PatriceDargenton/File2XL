@@ -1,952 +1,412 @@
-<html xmlns:v="urn:schemas-microsoft-com:vml"
-xmlns:o="urn:schemas-microsoft-com:office:office"
-xmlns:w="urn:schemas-microsoft-com:office:word"
-xmlns="http://www.w3.org/TR/REC-html40">
+<html>
 
 <head>
 <meta http-equiv=Content-Type content="text/html; charset=windows-1252">
-<meta name=ProgId content=Word.Document>
-<meta name=Generator content="Microsoft Word 10">
-<meta name=Originator content="Microsoft Word 10">
-<link rel=File-List href="File2XL_fichiers/filelist.xml">
+<meta name=Generator content="Microsoft Word 10 (filtered)">
 <title>File2XL : Open a csv file into MS-Excel with pre-formatted cells</title>
-<!--[if gte mso 9]><xml>
- <o:DocumentProperties>
-  <o:Author>Patrice DARGENTON</o:Author>
-  <o:LastAuthor>?</o:LastAuthor>
-  <o:Revision>2</o:Revision>
-  <o:TotalTime>138</o:TotalTime>
-  <o:LastPrinted>2003-01-08T12:46:00Z</o:LastPrinted>
-  <o:Created>2016-06-25T07:25:00Z</o:Created>
-  <o:LastSaved>2016-06-25T07:25:00Z</o:LastSaved>
-  <o:Pages>3</o:Pages>
-  <o:Words>1020</o:Words>
-  <o:Characters>5611</o:Characters>
-  <o:Company>ORS Production</o:Company>
-  <o:Lines>46</o:Lines>
-  <o:Paragraphs>13</o:Paragraphs>
-  <o:CharactersWithSpaces>6618</o:CharactersWithSpaces>
-  <o:Version>10.6870</o:Version>
- </o:DocumentProperties>
-</xml><![endif]--><!--[if gte mso 9]><xml>
- <w:WordDocument>
-  <w:SpellingState>Clean</w:SpellingState>
-  <w:GrammarState>Clean</w:GrammarState>
-  <w:HyphenationZone>21</w:HyphenationZone>
-  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
- </w:WordDocument>
-</xml><![endif]-->
+
 <style>
 <!--
  /* Style Definitions */
  p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{mso-style-parent:"";
-	margin:0cm;
+	{margin:0cm;
 	margin-bottom:.0001pt;
 	text-align:justify;
-	mso-pagination:widow-orphan;
 	font-size:12.0pt;
 	font-family:"Times New Roman";
-	mso-fareast-font-family:"Times New Roman";
-	mso-bidi-font-family:Arial;
 	color:black;}
 h1
 	{margin:0cm;
 	margin-bottom:.0001pt;
 	text-align:justify;
-	mso-pagination:widow-orphan;
-	mso-outline-level:1;
 	font-size:16.0pt;
-	mso-bidi-font-size:24.0pt;
 	font-family:"Times New Roman";
-	mso-bidi-font-family:Arial;
 	color:black;
 	font-weight:bold;}
 h2
 	{margin:0cm;
 	margin-bottom:.0001pt;
 	text-align:justify;
-	mso-pagination:widow-orphan;
-	mso-outline-level:2;
 	font-size:14.0pt;
-	mso-bidi-font-size:18.0pt;
 	font-family:"Times New Roman";
-	mso-bidi-font-family:Arial;
 	color:#339966;
 	font-weight:bold;}
 h3
 	{margin:0cm;
 	margin-bottom:.0001pt;
 	text-align:justify;
-	mso-pagination:widow-orphan;
-	mso-outline-level:3;
 	font-size:12.0pt;
-	mso-bidi-font-size:13.5pt;
 	font-family:"Times New Roman";
 	color:windowtext;
 	font-weight:bold;}
 p.MsoToc1, li.MsoToc1, div.MsoToc1
-	{mso-style-update:auto;
-	mso-style-noshow:yes;
-	mso-style-next:Normal;
-	margin:0cm;
+	{margin:0cm;
 	margin-bottom:.0001pt;
 	text-align:justify;
-	mso-pagination:widow-orphan;
-	tab-stops:right dotted 509.7pt;
 	font-size:12.0pt;
 	font-family:"Times New Roman";
-	mso-fareast-font-family:"Times New Roman";
-	mso-bidi-font-family:Arial;
-	color:black;
-	mso-no-proof:yes;}
+	color:black;}
 p.MsoToc2, li.MsoToc2, div.MsoToc2
-	{mso-style-update:auto;
-	mso-style-noshow:yes;
-	mso-style-next:Normal;
-	margin-top:0cm;
+	{margin-top:0cm;
 	margin-right:0cm;
 	margin-bottom:0cm;
 	margin-left:11.9pt;
 	margin-bottom:.0001pt;
 	text-align:justify;
-	mso-pagination:widow-orphan;
-	tab-stops:right dotted 509.7pt;
 	font-size:11.0pt;
 	font-family:"Times New Roman";
-	mso-fareast-font-family:"Times New Roman";
-	mso-bidi-font-family:Arial;
-	color:black;
-	mso-no-proof:yes;}
+	color:black;}
 a:link, span.MsoHyperlink
 	{color:blue;
-	text-decoration:underline;
-	text-underline:single;}
+	text-decoration:underline;}
 a:visited, span.MsoHyperlinkFollowed
 	{color:purple;
-	text-decoration:underline;
-	text-underline:single;}
+	text-decoration:underline;}
 p
 	{margin:0cm;
 	margin-bottom:.0001pt;
 	text-align:justify;
-	mso-pagination:widow-orphan;
 	font-size:12.0pt;
 	font-family:"Times New Roman";
-	mso-fareast-font-family:"Times New Roman";
-	mso-bidi-font-family:Arial;
 	color:black;}
 pre
 	{margin:0cm;
 	margin-bottom:.0001pt;
 	text-align:justify;
-	mso-pagination:widow-orphan;
-	tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt;
 	font-size:9.0pt;
-	mso-bidi-font-size:10.0pt;
 	font-family:"Courier New";
-	mso-fareast-font-family:"Courier New";
 	color:windowtext;}
-span.apple-converted-space
-	{mso-style-name:apple-converted-space;}
-span.googqs-tidbitgoogqs-tidbit-0googqs-tidbit-hilite
-	{mso-style-name:"goog_qs-tidbit goog_qs-tidbit-0 goog_qs-tidbit-hilite";}
-span.SpellE
-	{mso-style-name:"";
-	mso-spl-e:yes;}
-span.GramE
-	{mso-style-name:"";
-	mso-gram-e:yes;}
 @page Section1
 	{size:595.3pt 841.9pt;
-	margin:42.55pt 42.55pt 42.55pt 42.55pt;
-	mso-header-margin:35.45pt;
-	mso-footer-margin:35.45pt;
-	mso-paper-source:0;}
+	margin:42.55pt 42.55pt 42.55pt 42.55pt;}
 div.Section1
 	{page:Section1;}
 -->
 </style>
-<!--[if gte mso 10]>
-<style>
- /* Style Definitions */
- table.MsoNormalTable
-	{mso-style-name:"Tableau Normal";
-	mso-tstyle-rowband-size:0;
-	mso-tstyle-colband-size:0;
-	mso-style-noshow:yes;
-	mso-style-parent:"";
-	mso-padding-alt:0cm 5.4pt 0cm 5.4pt;
-	mso-para-margin:0cm;
-	mso-para-margin-bottom:.0001pt;
-	mso-pagination:widow-orphan;
-	font-size:10.0pt;
-	font-family:"Times New Roman";}
-</style>
-<![endif]--><!--[if gte mso 9]><xml>
- <o:shapedefaults v:ext="edit" spidmax="2050">
-  <o:colormenu v:ext="edit" fillcolor="aqua"/>
- </o:shapedefaults></xml><![endif]--><!--[if gte mso 9]><xml>
- <o:shapelayout v:ext="edit">
-  <o:idmap v:ext="edit" data="1"/>
- </o:shapelayout></xml><![endif]-->
+
 </head>
 
-<body bgcolor=aqua lang=FR link=blue vlink=purple style='tab-interval:35.4pt'>
+<body bgcolor=aqua lang=FR link=blue vlink=purple>
 
 <div class=Section1>
 
-<p class=MsoNormal><span class=GramE><b style='mso-bidi-font-weight:normal'><span
-lang=EN-US style='font-size:16.0pt;mso-ansi-language:EN-US'>File2XL&nbsp;:</span></b></span><b
-style='mso-bidi-font-weight:normal'><span lang=EN-US style='font-size:16.0pt;
-mso-ansi-language:EN-US'> Open a <span class=SpellE>csv</span> file into
-MS-Excel with pre-formatted cells<o:p></o:p></span></b></p>
+<p class=MsoNormal><b><span lang=EN-US style='font-size:16.0pt'>File2XL&nbsp;: Open
+a csv file into MS-Excel with pre-formatted cells</span></b></p>
 
-<p class=MsoNormal><span class=GramE><span lang=EN-US style='mso-ansi-language:
-EN-US'>Documentation&nbsp;:</span></span><span lang=EN-US style='mso-ansi-language:
-EN-US'> File2XL.html<o:p></o:p></span></p>
+<p class=MsoNormal><span lang=EN-US>Documentation&nbsp;: File2XL.html</span></p>
 
-<p class=MsoNormal><span lang=EN-US style='mso-ansi-language:EN-US'><a
-href="http://patrice.dargenton.free.fr/CodesSources/File2XL.html">http://patrice.dargenton.free.fr/CodesSources/File2XL.html</a><o:p></o:p></span></p>
+<p class=MsoNormal><span lang=EN-US><a
+href="http://patrice.dargenton.free.fr/CodesSources/File2XL.html">http://patrice.dargenton.free.fr/CodesSources/File2XL.html</a></span></p>
 
-<p class=MsoNormal><span lang=EN-US style='mso-ansi-language:EN-US'><a
-href="http://patrice.dargenton.free.fr/CodesSources/File2XL.vbproj.html">http://patrice.dargenton.free.fr/CodesSources/File2XL.vbproj.html</a><o:p></o:p></span></p>
+<p class=MsoNormal><span lang=EN-US><a
+href="http://patrice.dargenton.free.fr/CodesSources/File2XL.vbproj.html">http://patrice.dargenton.free.fr/CodesSources/File2XL.vbproj.html</a></span></p>
 
-<p class=MsoNormal><span lang=EN-US style='mso-ansi-language:EN-US'><a
-href="https://github.com/PatriceDargenton/File2XL">https://github.com/PatriceDargenton/File2XL</a><o:p></o:p></span></p>
+<p class=MsoNormal><span lang=EN-US><a
+href="https://github.com/PatriceDargenton/File2XL">https://github.com/PatriceDargenton/File2XL</a></span></p>
 
-<p class=MsoNormal><span lang=EN-US style='mso-ansi-language:EN-US'>By Patrice <span
-class=SpellE><span class=GramE>Dargenton</span></span><span class=GramE>&nbsp;:</span>
-<a href="mailto:patrice.dargenton@free.fr">patrice.dargenton@free.fr</a><o:p></o:p></span></p>
+<p class=MsoNormal><span lang=EN-US><a
+href="http://www.codeproject.com/Tips/1108923/File-XL-Open-a-csv-file-into-MS-Excel-with-pre-for">www.codeproject.com</a></span></p>
 
-<p class=MsoNormal><span lang=EN-US style='mso-ansi-language:EN-US'><a
-href="http://patrice.dargenton.free.fr/index.html">http://patrice.dargenton.free.fr/index.html</a><o:p></o:p></span></p>
+<p class=MsoNormal><span lang=EN-US>By Patrice Dargenton&nbsp;: <a
+href="mailto:patrice.dargenton@free.fr">patrice.dargenton@free.fr</a></span></p>
 
-<p class=MsoNormal><span lang=EN-US style='mso-ansi-language:EN-US'><a
-href="http://patrice.dargenton.free.fr/CodesSources/index.html">http://patrice.dargenton.free.fr/CodesSources/index.html</a><o:p></o:p></span></p>
+<p class=MsoNormal><span lang=EN-US><a
+href="http://patrice.dargenton.free.fr/index.html">http://patrice.dargenton.free.fr/index.html</a></span></p>
+
+<p class=MsoNormal><span lang=EN-US><a
+href="http://patrice.dargenton.free.fr/CodesSources/index.html">http://patrice.dargenton.free.fr/CodesSources/index.html</a></span></p>
 
 <p class=MsoNormal align=right style='text-align:right'><span lang=EN-US
-style='color:olive;mso-ansi-language:EN-US'>Version 1.01 - 25/06/2016<o:p></o:p></span></p>
+style='color:olive'>Version 1.02 - 08/05/2017</span></p>
 
 <p class=MsoNormal><a name="_Toc94692712"></a><a name="_Toc55899395"><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></a></p>
+lang=EN-US style='color:windowtext'>&nbsp;</span></a></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>File2XL lets you open any text file into MS-Excel and
-creates two <span class=GramE>sheets&nbsp;:</span> one in text format, and a
-second one in standard format for numeric columns. File2XL adds a context menu <span
-class=GramE>titled&nbsp;:</span> &quot;Open in MS-Excel using File2XL&quot; for
-any file in Windows File Explorer. Partially created workbook can be viewed
-without having to wait for the opening of the entire file.<o:p></o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>File2XL lets you
+open any text file into MS-Excel and creates two sheets&nbsp;: one in text
+format, and a second one in standard format for numeric columns. File2XL adds a
+context menu titled&nbsp;: &quot;Open in MS-Excel using File2XL&quot; for any
+file in Windows File Explorer. Partially created workbook can be viewed without
+having to wait for the opening of the entire file.</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;</span></p>
 
-<h1><span style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><a
-name="_Toc454605420"></a><span class=SpellE><span style='mso-bookmark:_Toc454605420'>Keywords</span></span><span
-style='mso-bookmark:_Toc454605420'></span></span></span></h1>
+<h1><a name="_Toc481994356">Keywords</a></h1>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'>Excel <span class=SpellE>Text</span> Import <span
-class=SpellE>Wizard</span>, Csv2Excel, Csv to Excel, Txt2Excel, Txt to Excel, Text2Excel,
-<span class=SpellE>Text</span> to Excel.<o:p></o:p></span></span></p>
+<p class=MsoNormal>Excel Text Import Wizard, Csv2Excel, Csv to Excel,
+Txt2Excel, Txt to Excel, Text2Excel, Text to Excel.</p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;</span></p>
 
-<h1><span style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><a
-name="_Toc454605421"><span lang=EN-US style='mso-ansi-language:EN-US'>Table of
-contents</span></a></span></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='mso-ansi-language:
-EN-US'><o:p></o:p></span></span></span></h1>
+<h1><a name="_Toc481994357"><span lang=EN-US>Table of contents</span></a></h1>
 
-<p class=MsoToc1><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-begin'></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='mso-spacerun:yes'> </span>TOC \o
-&quot;1-3&quot; \h \z \u <span style='mso-element:field-separator'></span></span></span><![endif]--><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><a
-href="#_Toc454605420"><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'>Keywords</span></span><span style='mso-bookmark:
-_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span style='color:black;
-display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
-style='mso-tab-count:1 dotted'>. </span></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-begin'></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;display:none;
-mso-hide:screen;text-decoration:none;text-underline:none'> PAGEREF
-_Toc454605420 \h </span></span></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;text-decoration:
-none;text-underline:none'><span style='display:none;mso-hide:screen'><span
-style='mso-element:field-separator'></span></span></span></span></span><![endif]--><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='color:black;display:none;mso-hide:screen;text-decoration:none;
-text-underline:none'>1<!--[if gte mso 9]><xml>
- <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003400350034003600300035003400320030000000</w:data>
-</xml><![endif]--></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-end'></span><![endif]--><span style='mso-bookmark:
-_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span></a><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='mso-bidi-font-family:"Times New Roman";color:windowtext'><o:p></o:p></span></span></span></p>
+<p class=MsoToc1><a href="#_Toc481994356">Keywords<span style='color:black;
+display:none;text-decoration:none'>. </span><span
+style='color:black;display:none;text-decoration:none'>1</span></a></p>
 
-<p class=MsoToc1><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'></span></span><a href="#_Toc454605421"><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-lang=EN-US style='mso-ansi-language:EN-US'>Table of contents</span></span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='color:black;display:none;mso-hide:screen;text-decoration:none;
-text-underline:none'><span style='mso-tab-count:1 dotted'>. </span></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-begin'></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;display:none;
-mso-hide:screen;text-decoration:none;text-underline:none'> PAGEREF
-_Toc454605421 \h </span></span></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;text-decoration:
-none;text-underline:none'><span style='display:none;mso-hide:screen'><span
-style='mso-element:field-separator'></span></span></span></span></span><![endif]--><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='color:black;display:none;mso-hide:screen;text-decoration:none;
-text-underline:none'>1<!--[if gte mso 9]><xml>
- <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003400350034003600300035003400320031000000</w:data>
-</xml><![endif]--></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-end'></span><![endif]--><span style='mso-bookmark:
-_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span></a><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='mso-bidi-font-family:"Times New Roman";color:windowtext'><o:p></o:p></span></span></span></p>
+<p class=MsoToc1><a href="#_Toc481994357"><span lang=EN-US>Table of contents</span><span
+style='color:black;display:none;text-decoration:none'>. </span><span
+style='color:black;display:none;text-decoration:none'>1</span></a></p>
 
-<p class=MsoToc1><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'></span></span><a href="#_Toc454605422"><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-lang=EN-US style='mso-ansi-language:EN-US'>Features</span></span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='color:black;display:none;mso-hide:screen;text-decoration:none;
-text-underline:none'><span style='mso-tab-count:1 dotted'>. </span></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-begin'></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;display:none;
-mso-hide:screen;text-decoration:none;text-underline:none'> PAGEREF
-_Toc454605422 \h </span></span></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;text-decoration:
-none;text-underline:none'><span style='display:none;mso-hide:screen'><span
-style='mso-element:field-separator'></span></span></span></span></span><![endif]--><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='color:black;display:none;mso-hide:screen;text-decoration:none;
-text-underline:none'>1<!--[if gte mso 9]><xml>
- <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003400350034003600300035003400320032000000</w:data>
-</xml><![endif]--></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-end'></span><![endif]--><span style='mso-bookmark:
-_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span></a><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='mso-bidi-font-family:"Times New Roman";color:windowtext'><o:p></o:p></span></span></span></p>
+<p class=MsoToc1><a href="#_Toc481994358"><span lang=EN-US>Features</span><span
+style='color:black;display:none;text-decoration:none'>. </span><span
+style='color:black;display:none;text-decoration:none'>1</span></a></p>
 
-<p class=MsoToc1><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'></span></span><a href="#_Toc454605423"><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-lang=EN-US style='mso-ansi-language:EN-US'>Explanations</span></span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='color:black;display:none;mso-hide:screen;text-decoration:none;
-text-underline:none'><span style='mso-tab-count:1 dotted'>. </span></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-begin'></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;display:none;
-mso-hide:screen;text-decoration:none;text-underline:none'> PAGEREF
-_Toc454605423 \h </span></span></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;text-decoration:
-none;text-underline:none'><span style='display:none;mso-hide:screen'><span
-style='mso-element:field-separator'></span></span></span></span></span><![endif]--><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='color:black;display:none;mso-hide:screen;text-decoration:none;
-text-underline:none'>2<!--[if gte mso 9]><xml>
- <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003400350034003600300035003400320033000000</w:data>
-</xml><![endif]--></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-end'></span><![endif]--><span style='mso-bookmark:
-_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span></a><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='mso-bidi-font-family:"Times New Roman";color:windowtext'><o:p></o:p></span></span></span></p>
+<p class=MsoToc1><a href="#_Toc481994359"><span lang=EN-US>Explanations</span><span
+style='color:black;display:none;text-decoration:none'>. </span><span
+style='color:black;display:none;text-decoration:none'>2</span></a></p>
 
-<p class=MsoToc2><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'></span></span><a href="#_Toc454605424"><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-lang=EN-US style='mso-ansi-language:EN-US'>Context menu</span></span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='color:black;display:none;mso-hide:screen;text-decoration:none;
-text-underline:none'><span style='mso-tab-count:1 dotted'>. </span></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-begin'></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;display:none;
-mso-hide:screen;text-decoration:none;text-underline:none'> PAGEREF
-_Toc454605424 \h </span></span></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;text-decoration:
-none;text-underline:none'><span style='display:none;mso-hide:screen'><span
-style='mso-element:field-separator'></span></span></span></span></span><![endif]--><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='color:black;display:none;mso-hide:screen;text-decoration:none;
-text-underline:none'>2<!--[if gte mso 9]><xml>
- <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003400350034003600300035003400320034000000</w:data>
-</xml><![endif]--></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-end'></span><![endif]--><span style='mso-bookmark:
-_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span></a><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='font-size:12.0pt;mso-bidi-font-family:"Times New Roman";color:windowtext'><o:p></o:p></span></span></span></p>
+<p class=MsoToc2><a href="#_Toc481994360"><span lang=EN-US>Context menu</span><span
+style='color:black;display:none;text-decoration:none'>. </span><span
+style='color:black;display:none;text-decoration:none'>2</span></a></p>
 
-<p class=MsoToc2><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'></span></span><a href="#_Toc454605425"><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-lang=EN-US style='mso-ansi-language:EN-US'>Multiple delimiter</span></span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='color:black;display:none;mso-hide:screen;text-decoration:none;
-text-underline:none'><span style='mso-tab-count:1 dotted'> </span></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-begin'></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;display:none;
-mso-hide:screen;text-decoration:none;text-underline:none'> PAGEREF
-_Toc454605425 \h </span></span></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;text-decoration:
-none;text-underline:none'><span style='display:none;mso-hide:screen'><span
-style='mso-element:field-separator'></span></span></span></span></span><![endif]--><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='color:black;display:none;mso-hide:screen;text-decoration:none;
-text-underline:none'>2<!--[if gte mso 9]><xml>
- <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003400350034003600300035003400320035000000</w:data>
-</xml><![endif]--></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-end'></span><![endif]--><span style='mso-bookmark:
-_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span></a><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='font-size:12.0pt;mso-bidi-font-family:"Times New Roman";color:windowtext'><o:p></o:p></span></span></span></p>
+<p class=MsoToc2><a href="#_Toc481994361"><span lang=EN-US>Multiple delimiter</span><span
+style='color:black;display:none;text-decoration:none'> </span><span
+style='color:black;display:none;text-decoration:none'>2</span></a></p>
 
-<p class=MsoToc2><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'></span></span><a href="#_Toc454605426"><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-lang=EN-US style='mso-ansi-language:EN-US'>Settings</span></span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='color:black;display:none;mso-hide:screen;text-decoration:none;
-text-underline:none'><span style='mso-tab-count:1 dotted'>. </span></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-begin'></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;display:none;
-mso-hide:screen;text-decoration:none;text-underline:none'> PAGEREF
-_Toc454605426 \h </span></span></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;text-decoration:
-none;text-underline:none'><span style='display:none;mso-hide:screen'><span
-style='mso-element:field-separator'></span></span></span></span></span><![endif]--><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='color:black;display:none;mso-hide:screen;text-decoration:none;
-text-underline:none'>2<!--[if gte mso 9]><xml>
- <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003400350034003600300035003400320036000000</w:data>
-</xml><![endif]--></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-end'></span><![endif]--><span style='mso-bookmark:
-_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span></a><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='font-size:12.0pt;mso-bidi-font-family:"Times New Roman";color:windowtext'><o:p></o:p></span></span></span></p>
+<p class=MsoToc2><a href="#_Toc481994362"><span lang=EN-US>Settings</span><span
+style='color:black;display:none;text-decoration:none'>. </span><span
+style='color:black;display:none;text-decoration:none'>2</span></a></p>
 
-<p class=MsoToc1><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'></span></span><a href="#_Toc454605427"><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-lang=EN-US style='mso-ansi-language:EN-US'>Projects</span></span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='color:black;display:none;mso-hide:screen;text-decoration:none;
-text-underline:none'><span style='mso-tab-count:1 dotted'>. </span></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-begin'></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;display:none;
-mso-hide:screen;text-decoration:none;text-underline:none'> PAGEREF
-_Toc454605427 \h </span></span></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;text-decoration:
-none;text-underline:none'><span style='display:none;mso-hide:screen'><span
-style='mso-element:field-separator'></span></span></span></span></span><![endif]--><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='color:black;display:none;mso-hide:screen;text-decoration:none;
-text-underline:none'>2<!--[if gte mso 9]><xml>
- <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003400350034003600300035003400320037000000</w:data>
-</xml><![endif]--></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-end'></span><![endif]--><span style='mso-bookmark:
-_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span></a><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='mso-bidi-font-family:"Times New Roman";color:windowtext'><o:p></o:p></span></span></span></p>
+<p class=MsoToc1><a href="#_Toc481994363"><span lang=EN-US>Projects</span><span
+style='color:black;display:none;text-decoration:none'>. </span><span
+style='color:black;display:none;text-decoration:none'>2</span></a></p>
 
-<p class=MsoToc1><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'></span></span><a href="#_Toc454605428"><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-lang=EN-US style='mso-ansi-language:EN-US'>Versions</span></span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='color:black;display:none;mso-hide:screen;text-decoration:none;
-text-underline:none'><span style='mso-tab-count:1 dotted'>. </span></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-begin'></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;display:none;
-mso-hide:screen;text-decoration:none;text-underline:none'> PAGEREF
-_Toc454605428 \h </span></span></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;text-decoration:
-none;text-underline:none'><span style='display:none;mso-hide:screen'><span
-style='mso-element:field-separator'></span></span></span></span></span><![endif]--><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='color:black;display:none;mso-hide:screen;text-decoration:none;
-text-underline:none'>2<!--[if gte mso 9]><xml>
- <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003400350034003600300035003400320038000000</w:data>
-</xml><![endif]--></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-end'></span><![endif]--><span style='mso-bookmark:
-_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span></a><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='mso-bidi-font-family:"Times New Roman";color:windowtext'><o:p></o:p></span></span></span></p>
+<p class=MsoToc1><a href="#_Toc481994364"><span lang=EN-US>Versions</span><span
+style='color:black;display:none;text-decoration:none'>. </span><span
+style='color:black;display:none;text-decoration:none'>2</span></a></p>
 
-<p class=MsoToc2><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'></span></span><a href="#_Toc454605429"><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-lang=EN-US style='mso-ansi-language:EN-US'>Version 1.01 - 25/06/2016&nbsp;:
-First version</span></span></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;display:none;
-mso-hide:screen;text-decoration:none;text-underline:none'><span
-style='mso-tab-count:1 dotted'>. </span></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-begin'></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;display:none;
-mso-hide:screen;text-decoration:none;text-underline:none'> PAGEREF
-_Toc454605429 \h </span></span></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;text-decoration:
-none;text-underline:none'><span style='display:none;mso-hide:screen'><span
-style='mso-element:field-separator'></span></span></span></span></span><![endif]--><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='color:black;display:none;mso-hide:screen;text-decoration:none;
-text-underline:none'>2<!--[if gte mso 9]><xml>
- <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003400350034003600300035003400320039000000</w:data>
-</xml><![endif]--></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-end'></span><![endif]--><span style='mso-bookmark:
-_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span></a><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='font-size:12.0pt;mso-bidi-font-family:"Times New Roman";color:windowtext'><o:p></o:p></span></span></span></p>
+<p class=MsoToc2><a href="#_Toc481994365"><span lang=EN-US>Version 1.02 -
+08/05/2017</span><span style='color:black;display:none;text-decoration:none'>. </span><span
+style='color:black;display:none;text-decoration:none'>2</span></a></p>
 
-<p class=MsoToc1><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'></span></span><a href="#_Toc454605430"><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-lang=EN-US style='mso-ansi-language:EN-US'>Links</span></span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='color:black;display:none;mso-hide:screen;text-decoration:none;
-text-underline:none'><span style='mso-tab-count:1 dotted'>. </span></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-begin'></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;display:none;
-mso-hide:screen;text-decoration:none;text-underline:none'> PAGEREF
-_Toc454605430 \h </span></span></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;text-decoration:
-none;text-underline:none'><span style='display:none;mso-hide:screen'><span
-style='mso-element:field-separator'></span></span></span></span></span><![endif]--><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='color:black;display:none;mso-hide:screen;text-decoration:none;
-text-underline:none'>2<!--[if gte mso 9]><xml>
- <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003400350034003600300035003400330030000000</w:data>
-</xml><![endif]--></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-end'></span><![endif]--><span style='mso-bookmark:
-_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span></a><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='mso-bidi-font-family:"Times New Roman";color:windowtext'><o:p></o:p></span></span></span></p>
+<p class=MsoToc2><a href="#_Toc481994366"><span lang=EN-US>Version 1.01 -
+25/06/2016&nbsp;: First version</span><span style='color:black;display:none;
+text-decoration:none'>. </span><span
+style='color:black;display:none;text-decoration:none'>2</span></a></p>
 
-<p class=MsoToc2><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'></span></span><a href="#_Toc454605431"><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-lang=EN-US style='mso-ansi-language:EN-US'>See also</span></span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='color:black;display:none;mso-hide:screen;text-decoration:none;
-text-underline:none'><span style='mso-tab-count:1 dotted'>. </span></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-begin'></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;display:none;
-mso-hide:screen;text-decoration:none;text-underline:none'> PAGEREF
-_Toc454605431 \h </span></span></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span style='color:black;text-decoration:
-none;text-underline:none'><span style='display:none;mso-hide:screen'><span
-style='mso-element:field-separator'></span></span></span></span></span><![endif]--><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='color:black;display:none;mso-hide:screen;text-decoration:none;
-text-underline:none'>3<!--[if gte mso 9]><xml>
- <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003400350034003600300035003400330031000000</w:data>
-</xml><![endif]--></span></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-end'></span><![endif]--><span style='mso-bookmark:
-_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span></a><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='font-size:12.0pt;mso-bidi-font-family:"Times New Roman";color:windowtext'><o:p></o:p></span></span></span></p>
+<p class=MsoToc1><a href="#_Toc481994367"><span lang=EN-US>Links</span><span
+style='color:black;display:none;text-decoration:none'>. </span><span
+style='color:black;display:none;text-decoration:none'>3</span></a></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'></span></span><!--[if supportFields]><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-element:field-end'></span><![endif]--><span style='mso-bookmark:
-_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-lang=EN-US style='color:windowtext;mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></span></p>
+<p class=MsoToc2><a href="#_Toc481994368"><span lang=EN-US>See also</span><span
+style='color:black;display:none;text-decoration:none'>. </span><span
+style='color:black;display:none;text-decoration:none'>3</span></a></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;</span></p>
 
-<h1><span style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><a
-name="_Toc454605422"><span lang=EN-US style='mso-ansi-language:EN-US'>Features</span></a></span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-lang=EN-US style='mso-ansi-language:EN-US'><o:p></o:p></span></span></span></h1>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></span></p>
+<h1><a name="_Toc481994358"><span lang=EN-US>Features</span></a></h1>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>-&nbsp;Two sheets are <span class=GramE>created&nbsp;:</span>
-one in text format, and one in standard format for numeric columns, because
-sometimes you need to see the original text before it was converted to numeric
-(for conversion problem investigation)&nbsp;;<o:p></o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>-&nbsp;Partially workbook <span class=GramE>viewing&nbsp;:</span>
-check big file quickly before waiting the complete workbook to be created
-(pause/continue/cancel/show buttons are available)&nbsp;;<o:p></o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>-&nbsp;Two sheets are
+created&nbsp;: one in text format, and one in standard format for numeric
+columns, because sometimes you need to see the original text before it was
+converted to numeric (for conversion problem investigation)&nbsp;;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>-&nbsp;Excel limitations are <span class=GramE>checked&nbsp;:</span>
-256 columns and 65536 lines for Excel 2003, and 16384 columns and 1048576 lines
-for Excel 2007 (or &gt;), and 32767 characters max. in one cell for both
-versions&nbsp;; colored and text alerts are displayed within the sheet if these
-limits are exceeded, and you are only prompted once by this kind of limit
-exceed&nbsp;;<o:p></o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>-&nbsp;Partially
+workbook viewing&nbsp;: check big file quickly before waiting the complete
+workbook to be created (pause/continue/cancel/show buttons are available)&nbsp;;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>-&nbsp;Source file encoding is detected (UTF7, UTF8,
-Unicode, <span class=SpellE>BigEndianUnicode</span>, UTF32 and ASCII<span
-class=GramE>)&nbsp;;</span><o:p></o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>-&nbsp;Excel
+limitations are checked&nbsp;: 256 columns and 65536 lines for Excel 2003, and
+16384 columns and 1048576 lines for Excel 2007 (or &gt;), and 32767 characters
+max. in one cell for both versions&nbsp;; colored and text alerts are displayed
+within the sheet if these limits are exceeded, and you are only prompted once
+by this kind of limit exceed&nbsp;;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>-&nbsp;Temporary Excel file is removed after closing
-Excel, if you agree to delete <span class=GramE>it&nbsp;;</span><o:p></o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>-&nbsp;Source file
+encoding is detected (UTF7, UTF8, Unicode, BigEndianUnicode, UTF32 and ASCII)&nbsp;;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>-&nbsp;Delimiter <span class=GramE>detection&nbsp;:</span>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>-&nbsp;Temporary
+Excel file is removed after closing Excel, if you agree to delete it&nbsp;;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>-&nbsp;Delimiter detection&nbsp;:
 a few delimiters are counted (at the top of the file)&nbsp;: ,;| and
-tabulation&nbsp;; possible delimiters are configurable&nbsp;;<o:p></o:p></span></span></span></p>
+tabulation&nbsp;; possible delimiters are configurable&nbsp;;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>-&nbsp;Special <span class=GramE>delimiter&nbsp;:</span>
-&quot;,&quot; or &quot;;&quot; is supported (not configurable)&nbsp;;<o:p></o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>-&nbsp;Special delimiter&nbsp;:
+&quot;,&quot; or &quot;;&quot; is supported (not configurable)&nbsp;;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>-&nbsp;Minus sign at the end of the value is supported,
-e.g.: 0.72- </span></span></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='font-family:"Courier New";
-color:windowtext;mso-ansi-language:EN-US'>-&gt;</span></span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-lang=EN-US style='color:windowtext;mso-ansi-language:EN-US'> -<span
-class=GramE>0.72&nbsp;;</span><o:p></o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>-&nbsp;Minus sign
+at the end of the value is supported, e.g.: 0.72- </span><span lang=EN-US
+style='font-family:"Courier New";color:windowtext'>-&gt;</span><span
+lang=EN-US style='color:windowtext'> -0.72&nbsp;;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>-&nbsp;Using Excel 2003 (or 2000/2002) and/or Excel
-2007 (or &gt;) is <span class=GramE>configurable&nbsp;;</span><o:p></o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>-&nbsp;Using Excel
+2003 (or 2000/2002) and/or Excel 2007 (or &gt;) is configurable&nbsp;;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>-&nbsp;<span class=SpellE>Autofilter</span> on the
-header, the first line, is yet enabled (not configurable<span class=GramE>)&nbsp;;</span><o:p></o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>-&nbsp;Autofilter on
+the header, the first line, is yet enabled (not configurable)&nbsp;;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>-&nbsp;Frozen column is configurable (1 column left is
-always visible by default, but 0 is possible too<span class=GramE>)&nbsp;;</span><o:p></o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>-&nbsp;Frozen
+column is configurable (1 column left is always visible by default, but 0 is
+possible too)&nbsp;;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>-&nbsp;<span class=SpellE>Autosizing</span> columns is
-<span class=GramE>configurable&nbsp;;</span><o:p></o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>-&nbsp;Autosizing
+columns is configurable&nbsp;;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>-&nbsp;The number of header lines analyzed is <span
-class=GramE>configurable&nbsp;;</span><o:p></o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>-&nbsp;The number
+of header lines analyzed is configurable&nbsp;;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>-&nbsp;The standard sheet can be disabled (only text
-sheet is then created).<o:p></o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>-&nbsp;The
+standard sheet can be disabled (only text sheet is then created)&nbsp;;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>-&nbsp;Removing
+NULL value in standard sheet is configurable (for example PhpMyAdmin NULL value
+in csv export).</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;</span></p>
 
-<h1><span style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><a
-name="_Toc454605423"><span lang=EN-US style='mso-ansi-language:EN-US'>Explanations</span></a></span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-lang=EN-US style='mso-ansi-language:EN-US'><o:p></o:p></span></span></span></h1>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><a name="Not_nullable_foreign_key"></a><span
-lang=EN-US style='color:windowtext;mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></span></p>
+<h1><a name="_Toc481994359"><span lang=EN-US>Explanations</span></a></h1>
 
-<h2><span style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><a
-name="_Toc454605424"><span lang=EN-US style='mso-ansi-language:EN-US'>Context
-menu</span></a></span></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='mso-ansi-language:
-EN-US'><o:p></o:p></span></span></span></h2>
+<p class=MsoNormal><a name="Not_nullable_foreign_key"></a><span lang=EN-US
+style='color:windowtext'>&nbsp;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><a name="Not_nullable_without_default_value"></a><span
-lang=EN-US style='color:windowtext;mso-ansi-language:EN-US'>The first time, run
-File2XL in administrator privilege (run as admin.), and add (or remove) context
-menu using the + (or - respectively) <span class=GramE>button&nbsp;;</span><o:p></o:p></span></span></span></p>
+<h2><a name="_Toc481994360"><span lang=EN-US>Context menu</span></a></h2>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>After that, use the context menu &quot;Open in
-MS-Excel using File2XL&quot; for any text file in Windows File Explorer.<o:p></o:p></span></span></span></p>
+<p class=MsoNormal><a name="Not_nullable_without_default_value"></a><span
+lang=EN-US style='color:windowtext'>The first time, run File2XL in
+administrator privilege (run as admin.), and add (or remove) context menu using
+the + (or - respectively) button&nbsp;;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>After that, use
+the context menu &quot;Open in MS-Excel using File2XL&quot; for any text file
+in Windows File Explorer.</span></p>
 
-<h2><span style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><a
-name="_Toc454605425"><span lang=EN-US style='mso-ansi-language:EN-US'>Multiple
-delimiter</span></a></span></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='mso-ansi-language:
-EN-US'><o:p></o:p></span></span></span></h2>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>There are only two multiple delimiters (not
-configurable<span class=GramE>)&nbsp;:</span> &quot;,&quot; and &quot;;&quot;<o:p></o:p></span></span></span></p>
+<h2><a name="_Toc481994361"><span lang=EN-US>Multiple delimiter</span></a></h2>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>Only a quick parsing is performed (splitting with
-&quot;,&quot; or &quot;;&quot;), not a deep parsing. If a deep parsing is
-required (like the slow one that Excel use in his Text Import Wizard), there is
-a second context menu to prefer for example comma (,) to &quot;,<span
-class=GramE>&quot; :</span> &quot;Open in MS-Excel using File2XL (single delimiter)&quot;,
-otherwise the default context menu gives more chance to choose the multiple delimiter
-&quot;,&quot;.<o:p></o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>There are only two
+multiple delimiters (not configurable)&nbsp;: &quot;,&quot; and &quot;;&quot;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>Example of a file that is generated with multiple <span
-class=GramE>delimiter&nbsp;:</span> <span class=SpellE>phpmyadmin</span> <span
-class=SpellE>csv</span> export (null value doesn't have &quot;&quot;, so you should
-use the second context menu for it&nbsp;: single delimiter, if you have <span
-class=SpellE>nullable</span> fields).<o:p></o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>Only a quick
+parsing is performed (splitting with &quot;,&quot; or &quot;;&quot;), not a
+deep parsing. If a deep parsing is required (like the slow one that Excel use
+in his Text Import Wizard), there is a second context menu to choose for
+example comma (,) instead of &quot;,&quot; : &quot;Open in MS-Excel using
+File2XL (single delimiter)&quot;, otherwise the default context menu gives
+chance to choose the multiple delimiter &quot;,&quot;.</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>Example of a file
+that is generated with multiple delimiter&nbsp;: phpmyadmin csv export (null value
+doesn't have &quot;&quot;, so you should use the second context menu for it&nbsp;:
+single delimiter, if you have nullable fields).</span></p>
 
-<h2><span style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><a
-name="_Toc454605426"><span lang=EN-US style='mso-ansi-language:EN-US'>Settings</span></a></span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-lang=EN-US style='mso-ansi-language:EN-US'><o:p></o:p></span></span></span></h2>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>There is no user interface to configure settings,
-simply edit the <span class=SpellE>config</span>. <span class=GramE>file</span>
-in the notepad&nbsp;: File2XL.exe.config<o:p></o:p></span></span></span></p>
+<h2><a name="_Toc481994362"><span lang=EN-US>Settings</span></a></h2>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>There is no user
+interface to configure settings, simply edit the config. file in the
+notepad&nbsp;: File2XL.exe.config</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;</span></p>
 
-<h1><span style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><a
-name="_Toc454605427"><span lang=EN-US style='mso-ansi-language:EN-US'>Projects</span></a></span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-lang=EN-US style='mso-ansi-language:EN-US'><o:p></o:p></span></span></span></h1>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></span></p>
+<h1><a name="_Toc481994363"><span lang=EN-US>Projects</span></a></h1>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>-&nbsp;Numeric <span class=GramE>field&nbsp;:</span>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>-&nbsp;Numeric field&nbsp;:
 count how many decimal digits of precision are required (actually, no decimal is
-shown by default, but you can change it afterward in Excel as you want)&nbsp;;<o:p></o:p></span></span></span></p>
+shown by default, but you can change it afterward in Excel as you want)&nbsp;;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>-&nbsp;Date <span class=GramE>field&nbsp;:</span> show
-date (and time) fields in formatted and colored cells in the standard
-sheet&nbsp;;<o:p></o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>-&nbsp;Date field&nbsp;:
+show date (and time) fields in formatted and colored cells in the standard
+sheet&nbsp;;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>-&nbsp;Event handler for the writing of the Excel
-workbook (which may be cancelled) for large <span class=GramE>files&nbsp;:</span>
-suggestion have been submitted to NPOI team but not yet implemented (possible
-way to do it&nbsp;: counting every row or every line of each sheet to be
-written).<o:p></o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>-&nbsp;Event
+handler for the writing of the Excel workbook (which may be cancelled) for
+large files&nbsp;: suggestion have been submitted to NPOI team but not yet
+implemented (possible way to do it&nbsp;: counting every row or every line of
+each sheet to be written).</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;</span></p>
 
-<h1><span style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><a
-name="_Toc454605428"><span lang=EN-US style='mso-ansi-language:EN-US'>Versions</span></a></span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-lang=EN-US style='mso-ansi-language:EN-US'><o:p></o:p></span></span></span></h1>
+<h1><a name="_Toc481994364"><span lang=EN-US>Versions</span></a></h1>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;</span></p>
 
-<h2><span style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><a
-name="_Toc454605429"><span lang=EN-US style='mso-ansi-language:EN-US'>Version
-1.01 - 25/06/</span></a><span class=GramE><span style='mso-bookmark:_Toc454605429'><span
-lang=EN-US style='mso-ansi-language:EN-US'>2016&nbsp;:</span></span></span></span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-style='mso-bookmark:_Toc454605429'><span lang=EN-US style='mso-ansi-language:
-EN-US'> First version</span></span></span></span><span style='mso-bookmark:
-_Toc454605429'></span><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'><o:p></o:p></span></span></span></h2>
+<h2><a name="_Toc481994365"><span lang=EN-US>Version 1.02 - 08/05/2017</span></a></h2>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>-&nbsp;RemoveNULL setting&nbsp;:
+remove NULL in field value in standard sheet, for example PhpMyAdmin NULL value
+in csv export&nbsp;;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>-&nbsp;SingleDelimiter&nbsp;:
+disable multiple delimiter (not simply prefer single one).</span></p>
 
-<h1><span style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><a
-name="_Toc454605430"><span lang=EN-US style='mso-ansi-language:EN-US'>Links</span></a></span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-lang=EN-US style='mso-ansi-language:EN-US'><o:p></o:p></span></span></span></h1>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></span></p>
+<h2><a name="_Toc481994366"><span lang=EN-US>Version 1.01 - 25/06/2016&nbsp;:
+First version</span></a></h2>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>-&nbsp;Library <span class=GramE>used&nbsp;:</span> </span></span></span><a
-href="https://github.com/tonyqus/npoi"><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='mso-ansi-language:
-EN-US'>https://github.com/tonyqus/npoi</span></span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span></a><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'> (2.2.1.0
-version, <span class=SpellE>may</span> 2016)</span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>&nbsp;&nbsp;<span class=GramE>NPOI&nbsp;:</span> a
-.NET library that can read/write Office formats without Microsoft Office
-installed. No COM+, no <span class=SpellE>interop</span>.<o:p></o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>&nbsp;&nbsp;Only one add (</span>2.2.1.1</span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-class=GramE><span lang=EN-US style='color:windowtext;mso-ansi-language:EN-US'>)&nbsp;:</span></span></span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-lang=EN-US style='color:windowtext;mso-ansi-language:EN-US'> <span
-class=SpellE>GetColumnWidth</span>&nbsp;: <span class=SpellE>iNumRow</span>++;
-if (<span class=SpellE>iNumRow</span> &gt; <span class=SpellE>iNbRowMax</span>)
-break;<o:p></o:p></span></span></span></p>
+<h1><a name="_Toc481994367"><span lang=EN-US>Links</span></a></h1>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>&nbsp;&nbsp;<span class=GramE>const</span> <span
-class=SpellE>int</span> <span class=SpellE>iNbRowMax</span> = 100;<o:p></o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>&nbsp;&nbsp;<span class=GramE>in</span> order to
-perform a fast column <span class=SpellE>autosize</span> based on only the top
-100 lines (suggestion have been submitted to NPOI team but not yet implemented
-in the <span class=SpellE>github</span> repository).<o:p></o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>-&nbsp;Library used&nbsp;:
+</span><a href="https://github.com/tonyqus/npoi"><span lang=EN-US>https://github.com/tonyqus/npoi</span></a>
+(2.2.1.0 version, may 2016)</p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;&nbsp;NPOI&nbsp;:
+a .NET library that can read/write Office formats without Microsoft Office installed.
+No COM+, no interop.</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>-&nbsp;<span class=SpellE>Neuzilla</span> User Group (Tony
-<span class=SpellE>Qu</span> from <span class=SpellE>Neuzilla</span> is the
-main NPOI contributor<span class=GramE>)&nbsp;:</span><o:p></o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;&nbsp;Only
+one add (</span>2.2.1.1<span lang=EN-US style='color:windowtext'>)&nbsp;: GetColumnWidth&nbsp;:
+iNumRow++; if (iNumRow &gt; iNbRowMax) break;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'>&nbsp;&nbsp;</span></span></span><a
-href="https://www.linkedin.com/groups/6655065"><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='mso-ansi-language:
-EN-US'>https://www.linkedin.com/groups/6655065</span></span></span><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'></span></span></a><span
-style='mso-bookmark:_Toc55899395'><span style='mso-bookmark:_Toc94692712'><span
-lang=EN-US style='color:windowtext;mso-ansi-language:EN-US'><o:p></o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;&nbsp;const int
+iNbRowMax = 100;</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;&nbsp;in
+order to perform a fast column autosize based on only the top 100 lines
+(suggestion have been submitted to NPOI team but not yet implemented in the github
+repository).</span></p>
 
-<p class=MsoNormal><span style='mso-bookmark:_Toc55899395'><span
-style='mso-bookmark:_Toc94692712'><span lang=EN-US style='color:windowtext;
-mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></span></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;</span></p>
 
-<span style='mso-bookmark:_Toc94692712'></span><span style='mso-bookmark:_Toc55899395'></span>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>-&nbsp;Neuzilla
+User Group (Tony Qu from Neuzilla is the main NPOI contributor)&nbsp;:</span></p>
 
-<h2><a name="_Toc454605431"></a><a name="_Voir_aussi"></a><span
-style='mso-bookmark:_Toc454605431'><span lang=EN-US style='mso-ansi-language:
-EN-US'>See also</span></span><span lang=EN-US style='mso-ansi-language:EN-US'><o:p></o:p></span></h2>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;&nbsp;</span><a
+href="https://www.linkedin.com/groups/6655065"><span lang=EN-US>https://www.linkedin.com/groups/6655065</span></a></p>
 
-<p class=MsoNormal style='mso-pagination:none;layout-grid-mode:char'><span
-lang=EN-US style='mso-bidi-font-family:"Times New Roman";color:windowtext;
-mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;</span></p>
 
-<p class=MsoNormal style='mso-pagination:none;layout-grid-mode:char'><span
-lang=EN-US style='mso-bidi-font-family:"Times New Roman";color:windowtext;
-mso-ansi-language:EN-US'>-&nbsp;(<span class=SpellE>french</span>) <a
+<p class=MsoNormal><span lang=EN-US style='color:windowtext'>&nbsp;</span></p>
+
+<h2><a name="_Toc481994368"></a><a name="_Voir_aussi"></a><span lang=EN-US>See
+also</span></h2>
+
+<p class=MsoNormal style='layout-grid-mode:char'><span lang=EN-US
+style='color:windowtext'>&nbsp;</span></p>
+
+<p class=MsoNormal style='layout-grid-mode:char'><span lang=EN-US
+style='color:windowtext'>-&nbsp;(french) <a
 href="http://patrice.dargenton.free.fr/CodesSources/XL2Csv.html">XL2Csv</a>&nbsp;:
-<span class=SpellE>Convertir</span> <span class=GramE>un</span> <span
-class=SpellE>fichier</span> Excel en <span class=SpellE>fichiers</span> <span
-class=SpellE>Csv</span> (<span class=SpellE>ou</span> en 1 <span class=SpellE>fichier</span>
-txt)<o:p></o:p></span></p>
+Convertir un fichier Excel en fichiers Csv (ou en 1 fichier txt) (<a
+href="http://translate.google.com/translate?hl=en&amp;sl=fr&amp;u=http://patrice.dargenton.free.fr/CodesSources/XL2Csv.html">translate</a>)</span></p>
 
-<p class=MsoNormal style='mso-pagination:none;layout-grid-mode:char'><span
-lang=EN-US style='mso-bidi-font-family:"Times New Roman";color:windowtext;
-mso-ansi-language:EN-US'><span style='mso-tab-count:1'>            </span>Source
-code &nbsp;: <a
-href="http://patrice.dargenton.free.fr/CodesSources/XL2Csv.vbproj.html">XL2Csv.vbproj.html</a><o:p></o:p></span></p>
+<p class=MsoNormal style='layout-grid-mode:char'><span lang=EN-US
+style='color:windowtext'>            Source code &nbsp;: <a
+href="http://patrice.dargenton.free.fr/CodesSources/XL2Csv.vbproj.html">XL2Csv.vbproj.html</a></span></p>
 
 </div>
 

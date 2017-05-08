@@ -4,7 +4,7 @@
 ' Documentation : File2XL.html
 ' http://patrice.dargenton.free.fr/CodesSources/File2XL.html
 ' http://patrice.dargenton.free.fr/CodesSources/File2XL.vbproj.html
-' Version 1.01 - 25/06/2016
+' Version 1.02 - 08/05/2017
 ' By Patrice Dargenton : mailto:patrice.dargenton@free.fr
 ' http://patrice.dargenton.free.fr/index.html
 ' http://patrice.dargenton.free.fr/CodesSources/index.html
@@ -141,10 +141,10 @@ Private Function bStart(sPath$, bSingleDelimiter As Boolean) As Boolean
         IO.Path.GetFileNameWithoutExtension(sPath)
     Dim sPostFix$ = ""
     If bSingleDelimiter Then sPostFix = "_" & sSingleDelimiterArg
-    m_f2xl.m_sPathDestXls = sFileName & sPostFix & ".xls"
-    m_f2xl.m_sPathDestXlsx = sFileName & sPostFix & ".xlsx"
-    m_bXlsExists = bFileExists(m_f2xl.m_sPathDestXls)
-    m_bXlsxExists = bFileExists(m_f2xl.m_sPathDestXlsx)
+    m_f2xl.m_sDestPathXls = sFileName & sPostFix & ".xls"
+    m_f2xl.m_sDestPathXlsx = sFileName & sPostFix & ".xlsx"
+    m_bXlsExists = bFileExists(m_f2xl.m_sDestPathXls)
+    m_bXlsxExists = bFileExists(m_f2xl.m_sDestPathXlsx)
 
     m_bDelWorkBookOnClose = My.Settings.DeleteFileOnClose
 
@@ -158,6 +158,7 @@ Private Function bStart(sPath$, bSingleDelimiter As Boolean) As Boolean
     prm.iNbLinesAnalyzed = My.Settings.NbLinesAnalyzed
     prm.bPreferMultipleDelimiter = Not bSingleDelimiter
     prm.bAutosizeColumns = My.Settings.AutosizeColumns
+    prm.bRemoveNULL = My.Settings.RemoveNULL ' 28/04/2017
 
     If Not prm.bUseXls AndAlso Not prm.bUseXlsx Then
         If bDebug Then Stop
@@ -169,9 +170,9 @@ Private Function bStart(sPath$, bSingleDelimiter As Boolean) As Boolean
     ShowMessage("Converting...")
 
     If m_f2xl.bRead(prm, sPath, m_delegMsg) Then
-        Dim sPathDest$ = m_f2xl.m_sPathDestXls
-        If m_f2xl.m_bXlsx Then sPathDest = m_f2xl.m_sPathDestXlsx
-        If Not bLetOpenFile(sPathDest) Then m_bDelWorkBookOnClose = False
+        Dim sDestPath$ = m_f2xl.m_sDestPathXls
+        If m_f2xl.m_bXlsx Then sDestPath = m_f2xl.m_sDestPathXlsx
+        If Not bLetOpenFile(sDestPath) Then m_bDelWorkBookOnClose = False
     End If
 
     Return True
@@ -186,12 +187,12 @@ Private Sub Quit()
     If m_delegMsg.m_bCancel Then GoTo QuitNow
     If m_delegMsg.m_bPause Then m_delegMsg.m_bCancel = True : GoTo QuitNow
 
-    Dim sPath2$ = m_f2xl.m_sPathDestXlsx
-    Dim sPath$ = m_f2xl.m_sPathDestXls
+    Dim sPath2$ = m_f2xl.m_sDestPathXlsx
+    Dim sPath$ = m_f2xl.m_sDestPathXls
     Dim bWorkBookExists = m_bXlsExists
     If m_f2xl.m_bXlsx Then
-        sPath = m_f2xl.m_sPathDestXlsx : bWorkBookExists = m_bXlsxExists
-        sPath2 = m_f2xl.m_sPathDestXls ' Delete second path too, if necessary
+        sPath = m_f2xl.m_sDestPathXlsx : bWorkBookExists = m_bXlsxExists
+        sPath2 = m_f2xl.m_sDestPathXls ' Delete second path too, if necessary
     End If
 
     If String.IsNullOrEmpty(sPath) Then GoTo QuitNow
@@ -286,8 +287,8 @@ End Sub
 
 Private Sub cmdShow_Click(sender As Object, e As EventArgs) Handles cmdShow.Click
 
-    Dim sPath$ = m_f2xl.m_sPathDestXls
-    If m_f2xl.m_bXlsx Then sPath = m_f2xl.m_sPathDestXlsx
+    Dim sPath$ = m_f2xl.m_sDestPathXls
+    If m_f2xl.m_bXlsx Then sPath = m_f2xl.m_sDestPathXlsx
     If m_f2xl.bWrite() Then bLetOpenFile(sPath)
     m_delegMsg.m_bCancel = False
 
@@ -357,12 +358,12 @@ Private Sub ShowLongMessageDeleg(sender As Object, e As clsMsgEventArgs) _
     Me.ShowLongMessage(e.sMessage)
 End Sub
 
-Private Sub SetWaitCursor(ByVal sender As Object, ByVal e As clsWaitCursorEventArgs) _
+Private Sub SetWaitCursor(sender As Object, e As clsWaitCursorEventArgs) _
     Handles m_delegMsg.EvWaitCursor
     WaitCursor(e.bDisable)
 End Sub
 
-Private Sub WaitCursor(Optional ByVal bDisable As Boolean = False)
+Private Sub WaitCursor(Optional bDisable As Boolean = False)
 
     If bDisable Then
         Application.UseWaitCursor = False
@@ -489,14 +490,14 @@ Private Sub CheckContextMenu()
 
 End Sub
 
-Private Sub cmdAddContextMenu_Click(ByVal sender As Object, _
-    ByVal e As EventArgs) Handles cmdAddContextMenu.Click
+Private Sub cmdAddContextMenu_Click(sender As Object, e As EventArgs) _
+    Handles cmdAddContextMenu.Click
     AddContextMenus()
     CheckContextMenu()
 End Sub
 
-Private Sub cmdRemoveContextMenu_Click(ByVal sender As Object, _
-    ByVal e As EventArgs) Handles cmdRemoveContextMenu.Click
+Private Sub cmdRemoveContextMenu_Click(sender As Object, e As EventArgs) _
+    Handles cmdRemoveContextMenu.Click
     RemoveContextMenus()
     CheckContextMenu()
 End Sub
@@ -519,7 +520,7 @@ Private Sub RemoveContextMenus()
 
 End Sub
 
-Private Sub AddContextMenus(ByVal sKey$)
+Private Sub AddContextMenus(sKey$)
 
     Dim sExePath$ = Application.ExecutablePath
     Const bPrompt As Boolean = False
@@ -531,7 +532,7 @@ Private Sub AddContextMenus(ByVal sKey$)
 
 End Sub
 
-Private Sub RemoveContextMenus(ByVal sKey$)
+Private Sub RemoveContextMenus(sKey$)
 
     bAddContextMenu(sKey, sContextMenu_CmdKeyOpen, bRemove:=True, bPrompt:=False)
     bAddContextMenu(sKey, sContextMenu_CmdKeyOpen2, bRemove:=True, bPrompt:=False)

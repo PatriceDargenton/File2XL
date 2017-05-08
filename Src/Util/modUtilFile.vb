@@ -70,6 +70,7 @@ Retry:
 
 'Retry:
     Dim answer As MsgBoxResult = MsgBoxResult.Cancel
+    Dim fs As IO.FileStream = Nothing
     Try
         ' If Excel locked the file, the file can still be open for reading
         '  if the sharing mode is also set to IO.FileShare.ReadWrite
@@ -79,9 +80,9 @@ Retry:
         Dim share = IO.FileShare.ReadWrite
         ' bCheckForSlowRead : Throw an exception to check for slowness risk
         If bCheckForSlowRead Then share = IO.FileShare.Read : access = IO.FileAccess.Read
-        Using fs As New IO.FileStream(sFilePath, mode, access, share)
-            fs.Close()
-        End Using
+        fs = New IO.FileStream(sFilePath, mode, access, share)
+        fs.Close()
+        fs = Nothing
         Return True
     Catch ex As Exception
         Dim msgbs As MsgBoxStyle = MsgBoxStyle.Exclamation
@@ -114,6 +115,8 @@ Retry:
             ShowErrorMsg(ex, "bFileIsAvailable", "The file cannot be accessed : " & _
                 IO.Path.GetFileName(sFilePath) & vbCrLf & sFilePath, sPossibleErrCause)
         End If
+    Finally
+        If Not IsNothing(fs) Then fs.Dispose()
     End Try
 
     If answer = MsgBoxResult.Retry Then GoTo Retry
@@ -148,6 +151,11 @@ Public Function GetEncoding(filename As String) As Encoding
         Return Encoding.UTF8
     End If
 
+    ' 08/05/2017
+    If bom(0) = 50 AndAlso bom(1) = 48 AndAlso bom(2) = 49 AndAlso bom(3) = 54 Then
+        Return Encoding.UTF8
+    End If
+
     If bom(0) = &HFF AndAlso bom(1) = &HFE Then
         Return Encoding.Unicode
     End If
@@ -163,17 +171,18 @@ Public Function GetEncoding(filename As String) As Encoding
 
 End Function
 
-Public Function asReadFile(ByVal sFilePath$, _
-    Optional ByVal bReadOnly As Boolean = False, _
-    Optional ByVal bCheckCrCrLf As Boolean = False, _
-    Optional ByVal bUnicodeUTF8 As Boolean = False, _
-    Optional ByVal bWindows1252 As Boolean = False, _
+Public Function asReadFile(sFilePath$, _
+    Optional bReadOnly As Boolean = False, _
+    Optional bCheckCrCrLf As Boolean = False, _
+    Optional bUnicodeUTF8 As Boolean = False, _
+    Optional bWindows1252 As Boolean = False, _
     Optional encod As Encoding = Nothing) As String()
 
     ' Read and return the file content as an array of String
 
     If Not bFileExists(sFilePath, bPrompt:=True) Then Return Nothing
 
+    Dim fs As IO.FileStream = Nothing
     Try
 
         Dim encod0 As Encoding
@@ -191,13 +200,14 @@ Public Function asReadFile(ByVal sFilePath$, _
         If bReadOnly Then
             ' If Excel locked the file, the file can still be open for reading
             '  if the sharing mode is also set to IO.FileShare.ReadWrite
-            Using fs As New IO.FileStream(sFilePath, _
+            fs = New IO.FileStream(sFilePath, _
                 IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.ReadWrite)
             Using sr As New IO.StreamReader(fs, encod0)
+                fs = Nothing
                 ' Do exactly as sr.ReadLine()
                 Dim sStream As New clsStringStream(sr.ReadToEnd)
                 Return sStream.asLines(bCheckCrCrLf)
-            End Using : End Using
+            End Using
         Else
             Return IO.File.ReadAllLines(sFilePath, encod0)
         End If
@@ -205,11 +215,13 @@ Public Function asReadFile(ByVal sFilePath$, _
     Catch ex As Exception
         ShowErrorMsg(ex, "asReadFile")
         Return Nothing
+    Finally
+        If Not IsNothing(fs) Then fs.Dispose()
     End Try
 
 End Function
 
-Public Function bLetOpenFile(sFilePath$, Optional ByVal bCheckFile As Boolean = True, _
+Public Function bLetOpenFile(sFilePath$, Optional bCheckFile As Boolean = True, _
     Optional sInfo$ = "") As Boolean
 
     ' Don't check file if it is a URL, for example
@@ -226,6 +238,21 @@ Public Function bLetOpenFile(sFilePath$, Optional ByVal bCheckFile As Boolean = 
     Return True
 
 End Function
+
+Public Sub LetOpenFile(sFilePath$, Optional sInfo$ = "")
+
+    If Not bFileExists(sFilePath, bPrompt:=True) Then Exit Sub
+    Dim lFileSize& = (New IO.FileInfo(sFilePath)).Length
+    Dim sFileSize$ = sDisplaySizeInBytes(lFileSize)
+    Dim sMsg$ = "File created successfully : " & IO.Path.GetFileName(sFilePath) & _
+        vbLf & sFilePath
+    If sInfo.Length > 0 Then sMsg &= vbLf & sInfo
+    sMsg &= vbLf & "Would you like to open it ? (" & sFileSize & ")"
+    If MsgBoxResult.Cancel = MsgBox(sMsg, _
+        MsgBoxStyle.Exclamation Or MsgBoxStyle.OkCancel, m_sMsgTitle) Then Exit Sub
+    StartAssociateApp(sFilePath)
+
+End Sub
 
 Public Sub StartAssociateApp(sFilePath$, _
     Optional bMaximized As Boolean = False, _
@@ -277,6 +304,48 @@ Public Function sDisplaySizeInBytes$(lSizeInBytes&, _
 
 End Function
 
+Public Function sDisplayTime$(rNbSeconds#)
+
+    ' Return a during time in a String
+
+    Dim sDisplay$ = ""
+    Dim sSep$ = ""
+
+    Dim rNbMn# = rNbSeconds / 60
+    Dim rNbHours# = rNbMn / 60
+    Dim rNbDays# = rNbHours / 24
+
+    Dim iNbDays% = CInt(Fix(rNbDays))
+    If iNbDays >= 1 Then
+        sDisplay &= sSep & iNbDays & " d." : sSep = " "
+        rNbHours -= iNbDays * 24
+        rNbMn -= iNbDays * 24 * 60
+        rNbSeconds -= iNbDays * 24 * 3600
+    End If
+    Dim iNbHours% = CInt(Fix(rNbHours))
+    If iNbHours >= 1 Then
+        sDisplay &= sSep & iNbHours & " h." : sSep = " "
+        rNbMn -= iNbHours * 60
+        rNbSeconds -= iNbHours * 3600
+    End If
+    Dim iNbMn% = CInt(Fix(rNbMn))
+    If iNbMn >= 1 Then
+        sDisplay &= sSep & iNbMn & " mn" : sSep = " "
+        rNbSeconds -= iNbMn * 60
+    End If
+
+    Dim rNbSecondsSng! = CSng(rNbSeconds)
+    ' 14/12/2016 Hide 0 sec. if there are mn, h or days
+    If rNbSecondsSng = 0 AndAlso (iNbMn > 0 OrElse iNbHours > 0 OrElse iNbDays > 0) Then
+        ' Display nothing else
+    ElseIf rNbSeconds >= 0 Then
+        sDisplay &= sSep & sDisplayNumeric(rNbSecondsSng, bRemoveDot0:=True) & " sec."
+    End If
+
+    Return sDisplay
+
+End Function
+
 Public Function sDisplayNumeric$(rValue!, Optional bRemoveDot0 As Boolean = True, Optional iNbDigits% = 1)
 
     ' Show a numeric with 1 digit accuracy by default
@@ -287,6 +356,7 @@ Public Function sDisplayNumeric$(rValue!, Optional bRemoveDot0 As Boolean = True
     Dim nfi As Globalization.NumberFormatInfo = _
         New Globalization.NumberFormatInfo
     nfi.NumberGroupSeparator = " "   ' Thousand and million separator...
+    Const sDot$ = "."
     nfi.NumberDecimalSeparator = sDot ' Decimal separator
     ' 3 groups for billion, million and thousand
     nfi.NumberGroupSizes = New Integer() {3, 3, 3}
@@ -407,12 +477,11 @@ Public Function bWriteFile(sFilePath$, sbContenu As StringBuilder, _
 
     If Not bDeleteFile(sFilePath, bPromptIfErr:=True) Then Return False
 
-    Dim sw As IO.StreamWriter = Nothing
     Try
         If bDefautEncoding Then encode = Encoding.Default
-        sw = New IO.StreamWriter(sFilePath, append:=False, Encoding:=encode)
-        sw.Write(sbContenu.ToString())
-        sw.Close()
+        Using sw As New IO.StreamWriter(sFilePath, append:=False, Encoding:=encode)
+            sw.Write(sbContenu.ToString())
+        End Using
         Return True
     Catch ex As Exception
         Dim sMsg$ = "Can't write file : " & IO.Path.GetFileName(sFilePath) & vbCrLf & _
@@ -420,8 +489,6 @@ Public Function bWriteFile(sFilePath$, sbContenu As StringBuilder, _
         sMsgErr = sMsg & vbCrLf & ex.Message
         If bPromptIfErr Then ShowErrorMsg(ex, "bWriteFile", sMsg)
         Return False
-    Finally
-        If Not IsNothing(sw) Then sw.Close()
     End Try
 
 End Function
@@ -441,11 +508,11 @@ Public Class clsStringStream
     Private c13 As Char = ChrW(13) ' vbCr
     Private c10 As Char = ChrW(10) ' vbLf
 
-    Public Sub New(ByVal sString$)
+    Public Sub New(sString$)
         m_sString = sString
     End Sub
 
-    Public Function asLines(Optional ByVal bCheckCrCrLf As Boolean = False) As String()
+    Public Function asLines(Optional bCheckCrCrLf As Boolean = False) As String()
 
         Dim lst As New Collections.Generic.List(Of String)
         Dim iNumLine2% = 0
@@ -461,7 +528,7 @@ Public Class clsStringStream
 
     ' Attribute for inline to avoid function overhead
     <MethodImpl(MethodImplOptions.AggressiveInlining)> _
-    Public Function StringReadLine$(Optional ByVal bCheckCrCrLf As Boolean = False)
+    Public Function StringReadLine$(Optional bCheckCrCrLf As Boolean = False)
 
         If String.IsNullOrEmpty(m_sString) Then Return Nothing
 
@@ -514,7 +581,7 @@ End Class
 
 #End Region
 
-Public Function asCmdLineArg(ByVal sCmdLine$, Optional ByVal bRemoveSpaces As Boolean = True) As String()
+Public Function asCmdLineArg(sCmdLine$, Optional bRemoveSpaces As Boolean = True) As String()
 
     ' Return arguments of the command line
 
@@ -529,53 +596,60 @@ Public Function asCmdLineArg(ByVal sCmdLine$, Optional ByVal bRemoveSpaces As Bo
         Exit Function
     End If
 
-    'MsgBox "Arguments : " & Command, vbInformation, sTitreMsg
-
+    Dim lstArgs As New List(Of String) ' 16/10/2016
     Const iASCQuotes% = 34
     Const sDbleQuote$ = """" ' Only one " in fact : Chr$(34)
-    Dim iNbArg%, sFile$, sDelimiter$
-    Dim sCmd$, iLen%, iEnd%, iStart%, iStart2%
+    Dim sFile$, sDelimiter$
+    Dim sCmd$, iCmdLen%, iEnd%, iStart%, iStart2%
     Dim bEnd As Boolean, bQuotedFile As Boolean
+    Dim iNextCar% = 1
     sCmd = sCmdLine
-    iLen = Len(sCmd)
+    iCmdLen = Len(sCmd)
     iStart = 1
     Do
 
         bQuotedFile = False : sDelimiter = " "
 
-        If Mid$(sCmd, iStart, 2) = sDbleQuote & sDbleQuote Then
+        If Mid(sCmd, iStart, 2) = sDbleQuote & sDbleQuote Then
             bQuotedFile = True : sDelimiter = sDbleQuote
             iEnd = iStart + 1
             GoTo NextItem
         End If
 
-        If Mid$(sCmd, iStart, 1) = sDbleQuote Then bQuotedFile = True : sDelimiter = sDbleQuote
+        If Mid(sCmd, iStart, 1) = sDbleQuote Then bQuotedFile = True : sDelimiter = sDbleQuote
 
         iStart2 = iStart
-        If bQuotedFile AndAlso iStart2 < iLen Then iStart2 += 1
+        If bQuotedFile AndAlso iStart2 < iCmdLen Then iStart2 += 1
         iEnd = InStr(iStart2 + 1, sCmd, sDelimiter)
-        If iEnd = 0 Then bEnd = True : iEnd = iLen + 1
-        sFile = Mid$(sCmd, iStart2, iEnd - iStart2)
-        If bRemoveSpaces Then sFile = Trim$(sFile)
 
-        If sFile <> "" Then
-            ReDim Preserve asArgs(iNbArg)
-            asArgs(iNbArg) = sFile
-            iNbArg += 1
+        ' 16/10/2016 DblQuote " can replace space
+        iNextCar = 1
+        Dim iQuotedEnd% = InStr(iStart2 + 1, sCmd, sDbleQuote)
+        If iQuotedEnd > 0 AndAlso iEnd > 0 AndAlso iQuotedEnd < iEnd Then
+            iEnd = iQuotedEnd : bQuotedFile = True : sDelimiter = sDbleQuote : iNextCar = 0
         End If
 
-        If bEnd Or iEnd = iLen Then Exit Do
+        If iEnd = 0 Then bEnd = True : iEnd = iCmdLen + 1
+        sFile = Mid(sCmd, iStart2, iEnd - iStart2)
+        If bRemoveSpaces Then sFile = Trim$(sFile)
+
+        If sFile.Length > 0 Then lstArgs.Add(sFile)
+
+        If bEnd Or iEnd = iCmdLen Then Exit Do
 
 NextItem:
-        iStart = iEnd + 1
-        If bQuotedFile Then iStart = iEnd + 2
-        If iStart > iLen Then Exit Do
+        iStart = iEnd + iNextCar ' 1
+        ' 16/10/2016 DblQuote " can replace space
+        'If bQuotedFile Then iStart = iEnd + 2
+        If iStart > iCmdLen Then Exit Do
 
     Loop
 
+    asArgs = lstArgs.ToArray()
     For iNumArg As Integer = 0 To UBound(asArgs)
         Dim sArg$ = asArgs(iNumArg)
-        If Len(sArg) = 1 AndAlso Asc(sArg.Chars(0)) = iASCQuotes Then asArgs(iNumArg) = ""
+        Dim iLen% = Len(sArg)
+        If iLen = 1 AndAlso Asc(sArg.Chars(0)) = iASCQuotes Then asArgs(iNumArg) = ""
     Next iNumArg
 
     Return asArgs

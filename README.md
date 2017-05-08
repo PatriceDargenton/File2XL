@@ -2,6 +2,8 @@
 
 [File2XL.html](http://patrice.dargenton.free.fr/CodesSources/File2XL.html)  
 [File2XL.vbproj.html](http://patrice.dargenton.free.fr/CodesSources/File2XL.vbproj.html)  
+[File2XL on GitHub](https://github.com/PatriceDargenton/File2XL)  
+[File2XL on CodeProject](https://www.codeproject.com/Tips/1108923/File-XL-Open-a-csv-file-into-MS-Excel-with-pre-for)  
 By Patrice Dargenton (patrice.dargenton@free.fr)  
 [My website](http://patrice.dargenton.free.fr/index.html)  
 [My source codes](http://patrice.dargenton.free.fr/CodesSources/index.html)  
@@ -25,8 +27,8 @@ Excel Text Import Wizard, Csv2Excel, Csv to Excel, Txt2Excel, Txt to Excel, Text
 - Frozen column is configurable (1 column left is always visible by default, but 0 is possible too) ;
 - Autosizing columns is configurable ;
 - The number of header lines analyzed is configurable ;
-- The standard sheet can be disabled (only text sheet is then created).
-
+- The standard sheet can be disabled (only text sheet is then created) ;
+- Removing NULL value in standard sheet is configurable (for example PhpMyAdmin NULL value in csv export).
 
 #Explanations
 
@@ -37,7 +39,7 @@ After that, use the context menu "Open in MS-Excel using File2XL" for any text f
 ##Multiple delimiter
 There are only two multiple delimiters (not configurable) : "," and ";"
 
-Only a quick parsing is performed (splitting with "," or ";"), not a deep parsing. If a deep parsing is required (like the slow one that Excel use in his Text Import Wizard), there is a second context menu to prefer for example comma (,) to "," : "Open in MS-Excel using File2XL (single delimiter)", otherwise the default context menu gives more chance to choose the multiple delimiter ",".
+Only a quick parsing is performed (splitting with "," or ";"), not a deep parsing. If a deep parsing is required (like the slow one that Excel use in his Text Import Wizard), there is a second context menu to choose for example comma (,) instead of "," : "Open in MS-Excel using File2XL (single delimiter)", otherwise the default context menu gives chance to choose the multiple delimiter ",".
 
 Example of a file that is generated with multiple delimiter : phpmyadmin csv export (null value doesn't have "", so you should use the second context menu for it : single delimiter, if you have nullable fields).
 
@@ -52,6 +54,10 @@ There is no user interface to configure settings, simply edit the config. file i
 
 
 #Versions
+
+##Version 1.02 - 08/05/2017
+- RemoveNULL setting : remove NULL in field value in standard sheet, for example PhpMyAdmin NULL value in csv export ;
+- SingleDelimiter : disable multiple delimiter (not simply prefer single one).
 
 ##Version 1.01 - 25/06/2016 : First version
 

@@ -4,7 +4,7 @@
 
 Module _modConst
 
-Public Const sAppDate$ = "25/06/2016"
+Public Const sAppDate$ = "08/05/2017" ' 1.01:16/10/2016
 
 #If DEBUG Then
     Public Const bDebug As Boolean = True
@@ -32,6 +32,7 @@ Public Const sDot$ = "."
 Public Const sPeriod$ = sDot
 Public Const sComma$ = ","
 Public Const sEmpty$ = ""
+Public Const sNULL$ = "NULL" ' PhpMyAdmin null value in csv export
 
 Public Const sTxtSheet$ = "Text sheet"
 Public Const sStdrSheet$ = "Standard sheet"

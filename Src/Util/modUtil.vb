@@ -128,7 +128,7 @@ Public Sub FreeDotNetRAM(Optional bComResources As Boolean = False)
 
 End Sub
 
-Public Function sRAMInfo$(Optional ByVal sMsg$ = "RAM : ")
+Public Function sRAMInfo$(Optional sMsg$ = "RAM : ")
 
     Dim x As Process = System.Diagnostics.Process.GetCurrentProcess
     Dim lAllocatedRamByApp& = x.WorkingSet64
@@ -165,7 +165,7 @@ Public Function sRAMInfo$(Optional ByVal sMsg$ = "RAM : ")
 End Function
 
 <MethodImpl(MethodImplOptions.AggressiveInlining)> _
-Public Function rFastConv#(ByVal sValue$, Optional ByVal rDef! = 0.0!, Optional ByRef bOK As Boolean = True)
+Public Function rFastConv#(sValue$, Optional rDef! = 0.0!, Optional ByRef bOK As Boolean = True)
 
     bOK = False
     If String.IsNullOrEmpty(sValue) Then Return rDef

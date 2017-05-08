@@ -54,81 +54,81 @@ Namespace My
             End Get
         End Property
         
-        <Global.System.Configuration.ApplicationScopedSettingAttribute(), _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
-         Global.System.Configuration.DefaultSettingValueAttribute("True")> _
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
         Public ReadOnly Property UseXls() As Boolean
             Get
-                Return CType(Me("UseXls"), Boolean)
-            End Get
-        End Property
-
-        <Global.System.Configuration.ApplicationScopedSettingAttribute(), _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
-         Global.System.Configuration.DefaultSettingValueAttribute("True")> _
-        Public ReadOnly Property UseXlsx() As Boolean
-            Get
-                Return CType(Me("UseXlsx"), Boolean)
-            End Get
-        End Property
-
-        <Global.System.Configuration.ApplicationScopedSettingAttribute(), _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
-         Global.System.Configuration.DefaultSettingValueAttribute(",;|" & Global.Microsoft.VisualBasic.ChrW(9))> _
-        Public ReadOnly Property FieldDelimiters() As String
-            Get
-                Return CType(Me("FieldDelimiters"), String)
-            End Get
-        End Property
-
-        <Global.System.Configuration.ApplicationScopedSettingAttribute(), _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
-         Global.System.Configuration.DefaultSettingValueAttribute("")> _
-        Public ReadOnly Property DefaultDelimiter() As String
-            Get
-                Return CType(Me("DefaultDelimiter"), String)
-            End Get
-        End Property
-
-        <Global.System.Configuration.ApplicationScopedSettingAttribute(), _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
-         Global.System.Configuration.DefaultSettingValueAttribute("True")> _
-        Public ReadOnly Property DeleteFileConfirm() As Boolean
-            Get
-                Return CType(Me("DeleteFileConfirm"), Boolean)
-            End Get
-        End Property
-
-        <Global.System.Configuration.ApplicationScopedSettingAttribute(), _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
-         Global.System.Configuration.DefaultSettingValueAttribute("True")> _
-        Public ReadOnly Property DeleteFileOnClose() As Boolean
-            Get
-                Return CType(Me("DeleteFileOnClose"), Boolean)
-            End Get
-        End Property
-
-        <Global.System.Configuration.ApplicationScopedSettingAttribute(), _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
-         Global.System.Configuration.DefaultSettingValueAttribute("True")> _
-        Public ReadOnly Property CreateStandardSheet() As Boolean
-            Get
-                Return CType(Me("CreateStandardSheet"), Boolean)
-            End Get
-        End Property
-
-        <Global.System.Configuration.ApplicationScopedSettingAttribute(), _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
-         Global.System.Configuration.DefaultSettingValueAttribute("1")> _
-        Public ReadOnly Property NbFrozenColumns() As Integer
-            Get
-                Return CType(Me("NbFrozenColumns"), Integer)
+                Return CType(Me("UseXls"),Boolean)
             End Get
         End Property
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("50")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public ReadOnly Property UseXlsx() As Boolean
+            Get
+                Return CType(Me("UseXlsx"),Boolean)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute(",;|"&Global.Microsoft.VisualBasic.ChrW(9))>  _
+        Public ReadOnly Property FieldDelimiters() As String
+            Get
+                Return CType(Me("FieldDelimiters"),String)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public ReadOnly Property DefaultDelimiter() As String
+            Get
+                Return CType(Me("DefaultDelimiter"),String)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public ReadOnly Property DeleteFileConfirm() As Boolean
+            Get
+                Return CType(Me("DeleteFileConfirm"),Boolean)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public ReadOnly Property DeleteFileOnClose() As Boolean
+            Get
+                Return CType(Me("DeleteFileOnClose"),Boolean)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public ReadOnly Property CreateStandardSheet() As Boolean
+            Get
+                Return CType(Me("CreateStandardSheet"),Boolean)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("1")>  _
+        Public ReadOnly Property NbFrozenColumns() As Integer
+            Get
+                Return CType(Me("NbFrozenColumns"),Integer)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("100")>  _
         Public ReadOnly Property NbLinesAnalyzed() As Integer
             Get
                 Return CType(Me("NbLinesAnalyzed"),Integer)
@@ -141,6 +141,15 @@ Namespace My
         Public ReadOnly Property AutosizeColumns() As Boolean
             Get
                 Return CType(Me("AutosizeColumns"),Boolean)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public ReadOnly Property RemoveNULL() As Boolean
+            Get
+                Return CType(Me("RemoveNULL"),Boolean)
             End Get
         End Property
     End Class
