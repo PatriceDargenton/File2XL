@@ -15,6 +15,8 @@ Private m_sSorting$ = ""
 
 Public Sub New(sort As String)
 
+    If String.IsNullOrEmpty(sort) Then Exit Sub
+
     m_sSorting = sort
 
     Dim type As Type = GetType(T)
@@ -27,7 +29,7 @@ Public Sub New(sort As String)
     For i As Integer = 0 To props.Length - 1
         ' Get the N-th member name.
         Dim memberName As String = props(i).Trim()
-        If memberName.ToLower().EndsWith(" desc") Then
+        If memberName.EndsWith(" desc", StringComparison.OrdinalIgnoreCase) Then
             ' Discard the DESC qualifier.
             sortKeys(i).Descending = True
             memberName = memberName.Remove(memberName.Length - 5).TrimEnd()
@@ -42,36 +44,36 @@ Public Sub New(sort As String)
 
 End Sub
 
-Public Function Compare(o1 As Object, o2 As Object) As Integer _
+Public Function Compare(x As Object, y As Object) As Integer _
     Implements IComparer.Compare
     ' Implementation of IComparer.Compare
-    Return Compare(CType(o1, T), CType(o2, T))
+    Return Compare(CType(x, T), CType(y, T))
 End Function
 
-Public Function Compare(o1 As T, o2 As T) As Integer _
+Public Function Compare(x As T, y As T) As Integer _
     Implements IComparer(Of T).Compare
 
     ' Implementation of IComparer(Of T).Compare
 
     ' Deal with the simplest cases first.
-    If o1 Is Nothing Then
+    If x Is Nothing Then
         ' Two null objects are equal.
-        If o2 Is Nothing Then Return 0
+        If y Is Nothing Then Return 0
         ' A null object is less than any non-null object.
         Return -1
-    ElseIf o2 Is Nothing Then
+    ElseIf y Is Nothing Then
         ' Any non-null object is greater than a null object.
         Return 1
     End If
 
     ' Iterate over all the sort keys.
     For i As Integer = 0 To sortKeys.Length - 1
-        Dim value1 As Object, value2 As Object
+        Dim oValue_x As Object, oValue_y As Object
         Dim sortKey As SortKey = sortKeys(i)
         ' Read either the field or the property.
         If sortKey.FieldInfo IsNot Nothing Then
-            value1 = sortKey.FieldInfo.GetValue(o1)
-            value2 = sortKey.FieldInfo.GetValue(o2)
+            oValue_x = sortKey.FieldInfo.GetValue(x)
+            oValue_y = sortKey.FieldInfo.GetValue(y)
         Else
             If IsNothing(sortKey.PropertyInfo) Then
                 If Not m_bMsg Then
@@ -84,30 +86,30 @@ Public Function Compare(o1 As T, o2 As T) As Integer _
                 End If
                 Return 0
             End If
-            value1 = sortKey.PropertyInfo.GetValue(o1, Nothing)
-            value2 = sortKey.PropertyInfo.GetValue(o2, Nothing)
+            oValue_x = sortKey.PropertyInfo.GetValue(x, Nothing)
+            oValue_y = sortKey.PropertyInfo.GetValue(y, Nothing)
         End If
 
-        Dim res As Integer
-        If value1 Is Nothing And value2 Is Nothing Then
+        Dim iRes%
+        If oValue_x Is Nothing And oValue_y Is Nothing Then
             ' Two null objects are equal.
-            res = 0
-        ElseIf value1 Is Nothing Then
+            iRes = 0
+        ElseIf oValue_x Is Nothing Then
             ' A null object is always less than a non-null object.
-            res = -1
-        ElseIf value2 Is Nothing Then
+            iRes = -1
+        ElseIf oValue_y Is Nothing Then
             ' Any object is greater than a null object.
-            res = 1
+            iRes = 1
         Else
             ' Compare the two values, assuming that they support IComparable.
-            res = DirectCast(value1, IComparable).CompareTo(value2)
+            iRes = DirectCast(oValue_x, IComparable).CompareTo(oValue_y)
         End If
 
         ' If values are different, return this value to caller.
-        If res <> 0 Then
+        If iRes <> 0 Then
             ' Negate it if sort direction is descending.
-            If sortKey.Descending Then res = -res
-            Return res
+            If sortKey.Descending Then iRes = -iRes
+            Return iRes
         End If
     Next i
 

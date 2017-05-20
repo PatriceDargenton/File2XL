@@ -4,7 +4,7 @@
 ' Documentation : File2XL.html
 ' http://patrice.dargenton.free.fr/CodesSources/File2XL.html
 ' http://patrice.dargenton.free.fr/CodesSources/File2XL.vbproj.html
-' Version 1.02 - 08/05/2017
+' Version 1.03 - 20/05/2017
 ' By Patrice Dargenton : mailto:patrice.dargenton@free.fr
 ' http://patrice.dargenton.free.fr/index.html
 ' http://patrice.dargenton.free.fr/CodesSources/index.html
@@ -99,6 +99,7 @@ Private Sub Initialization()
     'MsgBox("File2XL : " & sArg0)
     If bDebug Then
         sArg0 = Application.StartupPath & "\Tmp\Test256Col.dat"
+        'sArg0 = Application.StartupPath & "\Tmp\Article_SAP"
     Else
         Me.cmdCreateTestFiles.Visible = False
     End If
@@ -148,17 +149,21 @@ Private Function bStart(sPath$, bSingleDelimiter As Boolean) As Boolean
 
     m_bDelWorkBookOnClose = My.Settings.DeleteFileOnClose
 
-    Dim prm As New clsPrm
-    prm.sFieldDelimiters = My.Settings.FieldDelimiters
-    prm.sDefaultDelimiter = My.Settings.DefaultDelimiter
-    prm.bUseXls = My.Settings.UseXls
-    prm.bUseXlsx = My.Settings.UseXlsx
-
-    prm.iNbFrozenColumns = My.Settings.NbFrozenColumns
-    prm.iNbLinesAnalyzed = My.Settings.NbLinesAnalyzed
-    prm.bPreferMultipleDelimiter = Not bSingleDelimiter
-    prm.bAutosizeColumns = My.Settings.AutosizeColumns
-    prm.bRemoveNULL = My.Settings.RemoveNULL ' 28/04/2017
+    ' 20/05/2017 MinColumnWidth and MaxColumnWidth
+    ' 28/04/2017 .bRemoveNULL = My.Settings.RemoveNULL
+    Dim prm As New clsPrm With {
+        .sFieldDelimiters = My.Settings.FieldDelimiters,
+        .sDefaultDelimiter = My.Settings.DefaultDelimiter,
+        .bUseXls = My.Settings.UseXls,
+        .bUseXlsx = My.Settings.UseXlsx,
+        .iNbFrozenColumns = My.Settings.NbFrozenColumns,
+        .iNbLinesAnalyzed = My.Settings.NbLinesAnalyzed,
+        .bPreferMultipleDelimiter = Not bSingleDelimiter,
+        .bAutosizeColumns = My.Settings.AutosizeColumns,
+        .iMinColumnWidth = My.Settings.MinColumnWidth,
+        .iMaxColumnWidth = My.Settings.MaxColumnWidth,
+        .bRemoveNULL = My.Settings.RemoveNULL
+    }
 
     If Not prm.bUseXls AndAlso Not prm.bUseXlsx Then
         If bDebug Then Stop
@@ -169,9 +174,26 @@ Private Function bStart(sPath$, bSingleDelimiter As Boolean) As Boolean
 
     ShowMessage("Converting...")
 
+    Dim dTimeStart = Now()
     If m_f2xl.bRead(prm, sPath, m_delegMsg) Then
         Dim sDestPath$ = m_f2xl.m_sDestPathXls
         If m_f2xl.m_bXlsx Then sDestPath = m_f2xl.m_sDestPathXlsx
+
+        If My.Settings.LogFile Then ' 20/05/2017
+            Dim ci = Globalization.CultureInfo.CurrentCulture()
+            Dim dTimeEnd = Now()
+            Dim ts = dTimeEnd - dTimeStart
+            Const sDateTimeFormat = "dd\/MM\/yyyy HH:mm:ss"
+            Dim sTime$ = dTimeStart.ToString(sDateTimeFormat, ci) & " -> " & _
+                dTimeEnd.ToString(sDateTimeFormat, ci) & " : " & sDisplayTime(ts.TotalSeconds)
+            Dim sb As New StringBuilder()
+            sb.AppendLine()
+            sb.AppendLine(sTime)
+            sb.AppendLine("  -> " & sPath)
+            Dim sLogPath$ = Application.StartupPath & "\File2XL.log"
+            bWriteFile(sLogPath, sb, bAppend:=True)
+        End If
+
         If Not bLetOpenFile(sDestPath) Then m_bDelWorkBookOnClose = False
     End If
 
@@ -363,7 +385,7 @@ Private Sub SetWaitCursor(sender As Object, e As clsWaitCursorEventArgs) _
     WaitCursor(e.bDisable)
 End Sub
 
-Private Sub WaitCursor(Optional bDisable As Boolean = False)
+Private Shared Sub WaitCursor(Optional bDisable As Boolean = False)
 
     If bDisable Then
         Application.UseWaitCursor = False
@@ -373,7 +395,7 @@ Private Sub WaitCursor(Optional bDisable As Boolean = False)
 
 End Sub
 
-Public Class clsTest
+Private Class clsTest
     Public Const sTestHeader$ = "TestHeader"
     Public Const sTest255Col$ = "Test255Col"
     Public Const sTest256Col$ = "Test256Col"
@@ -420,7 +442,7 @@ Private Sub cmdCreateTestFiles_Click(sender As Object, e As EventArgs) Handles c
 
 End Sub
 
-Private Sub CreateTestFile(sTestFile$)
+Private Shared Sub CreateTestFile(sTestFile$)
 
     Dim bTestHeader As Boolean = False
     Dim bTestMaxTxtCell As Boolean = False
@@ -502,7 +524,7 @@ Private Sub cmdRemoveContextMenu_Click(sender As Object, e As EventArgs) _
     CheckContextMenu()
 End Sub
 
-Private Sub AddContextMenus()
+Private Shared Sub AddContextMenus()
 
     If MsgBoxResult.Cancel = MsgBox("Add context menu ?", _
         MsgBoxStyle.OkCancel Or MsgBoxStyle.Question, m_sMsgTitle) Then Exit Sub
@@ -511,7 +533,7 @@ Private Sub AddContextMenus()
 
 End Sub
 
-Private Sub RemoveContextMenus()
+Private Shared Sub RemoveContextMenus()
 
     If MsgBoxResult.Cancel = MsgBox("Remove context menu ?", _
         MsgBoxStyle.OkCancel Or MsgBoxStyle.Question, m_sMsgTitle) Then Exit Sub
@@ -520,7 +542,7 @@ Private Sub RemoveContextMenus()
 
 End Sub
 
-Private Sub AddContextMenus(sKey$)
+Private Shared Sub AddContextMenus(sKey$)
 
     Dim sExePath$ = Application.ExecutablePath
     Const bPrompt As Boolean = False
@@ -532,7 +554,7 @@ Private Sub AddContextMenus(sKey$)
 
 End Sub
 
-Private Sub RemoveContextMenus(sKey$)
+Private Shared Sub RemoveContextMenus(sKey$)
 
     bAddContextMenu(sKey, sContextMenu_CmdKeyOpen, bRemove:=True, bPrompt:=False)
     bAddContextMenu(sKey, sContextMenu_CmdKeyOpen2, bRemove:=True, bPrompt:=False)

@@ -126,7 +126,7 @@ Public Function bAddContextMenu(sFileType$, sCmd$, _
         Dim sCleCmd$ = sFileType & "\" & sShellKey & "\" & sCmd & "\" & sCmdKey
         Using rk As RegistryKey = Registry.ClassesRoot.CreateSubKey(sCleCmd)
             ' Add quotes " if the path contains spaces
-            If sExePath.IndexOf(" ") > -1 Then _
+            If sExePath.IndexOf(" ", StringComparison.Ordinal) > -1 Then _
                 sExePath = """" & sExePath & """"
             rk.SetValue("", sExePath & " " & sCmdDef)
         End Using

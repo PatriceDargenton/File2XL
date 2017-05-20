@@ -4,7 +4,7 @@
 
 Module _modConst
 
-Public Const sAppDate$ = "08/05/2017" ' 1.01:16/10/2016
+Public Const sAppDate$ = "20/05/2017" ' 1.02:08/05/2017 1.01:16/10/2016
 
 #If DEBUG Then
     Public Const bDebug As Boolean = True
@@ -40,26 +40,3 @@ Public Const sStdrSheet$ = "Standard sheet"
 Public Const sPostFixWithQuotes$ = "WithQuotes"
 
 End Module
-
-Public Class clsFieldType
-    Public Const sNumericC2P$ = "NumericC2P"
-    Public Const sNumericP2C$ = "NumericP2C" ' Period to Comma
-    Public Const sNumeric$ = "Numeric"
-    Public Const sNumericWithQuotes$ = "NumericWithQuotes"
-    Public Const sNumericC2PWithQuotes$ = "NumericC2PWithQuotes"
-    Public Const sNumericP2CWithQuotes$ = "NumericP2CWithQuotes"
-    Public Const sText$ = "Text"
-    Public Const sTextWithQuotes$ = "TextWithQuotes"
-End Class
-
-Public Class clsField
-    Public sField$, sType$
-    Public iNumField%, iNbOcc%
-    Public bCanEndWithMinus As Boolean = False ' Numeric followed by -
-    Public Sub New(iNumField0%, sField0$, sType0$)
-        iNumField = iNumField0
-        sField = sField0
-        sType = sType0
-        iNbOcc = 1
-    End Sub
-End Class

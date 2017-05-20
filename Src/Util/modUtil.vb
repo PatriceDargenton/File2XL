@@ -6,6 +6,8 @@ Imports System.Runtime.CompilerServices ' For MethodImpl(MethodImplOptions.Aggre
 
 Module modUtil
 
+' This field is rather a static variable than a member variable, it should be named s_sMsgTitle
+<CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1504:ReviewMisleadingFieldNames")> _
 Public m_sMsgTitle$ = sMsgTitle
 
 Public Sub SetMsgTitle(sMsgTitle$)
@@ -107,6 +109,8 @@ Public Sub TruncateChildTextAccordingToControlWidth(child As ToolStripLabel, _
 
 End Sub
 
+' GC.Collect is rarely usefull
+<CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId:="System.GC.Collect")> _
 Public Sub FreeDotNetRAM(Optional bComResources As Boolean = False)
 
     ' Clean up managed, and unmanaged COM resources if bComResources is True
@@ -130,6 +134,7 @@ End Sub
 
 Public Function sRAMInfo$(Optional sMsg$ = "RAM : ")
 
+    Dim ci = Globalization.CultureInfo.CurrentCulture()
     Dim x As Process = System.Diagnostics.Process.GetCurrentProcess
     Dim lAllocatedRamByApp& = x.WorkingSet64
 
@@ -144,12 +149,13 @@ Public Function sRAMInfo$(Optional sMsg$ = "RAM : ")
         End If
         Dim sRamAvailable32$ = sDisplaySizeInBytes(CLng(lRamAvailable32))
         Dim rPCRAMUsed32! = CSng(lAllocatedRamByApp / lRamAvailable32)
-        Dim sRam32$ = sMsg & sAllocatedRamByApp & " / " & sRamAvailable32 & " (" & rPCRAMUsed32.ToString("0.0 %") & ")"
+        Dim sRam32$ = sMsg & sAllocatedRamByApp & " / " & sRamAvailable32 & _
+            " (" & rPCRAMUsed32.ToString("0.0 %", ci) & ")"
         Return sRam32
     End If
 
     Dim lRamAvailable As ULong = My.Computer.Info.AvailablePhysicalMemory
-    Dim sRamAvailable$ = sDisplaySizeInBytes(CLng(lRamAvailable))
+    'Dim sRamAvailable$ = sDisplaySizeInBytes(CLng(lRamAvailable))
     Dim lRamTot As ULong = My.Computer.Info.TotalPhysicalMemory
     Dim sRamTot$ = sDisplaySizeInBytes(CLng(lRamTot))
     Dim lTotAllocated As ULong = lRamTot - lRamAvailable
@@ -158,8 +164,8 @@ Public Function sRAMInfo$(Optional sMsg$ = "RAM : ")
     Dim sAllocatedByOtherProc$ = sDisplaySizeInBytes(CLng(lAllocatedByOtherProc))
 
     Dim rPCRAMUsed! = CSng(lTotAllocated / lRamTot)
-    Dim sRam$ = sMsg & sAllocatedRamByApp & " + " & sAllocatedByOtherProc & " = " & sTotAllocatedRAM & _
-        " / " & sRamTot & " (" & rPCRAMUsed.ToString("0.0 %") & ")"
+    Dim sRam$ = sMsg & sAllocatedRamByApp & " + " & sAllocatedByOtherProc & " = " & _
+        sTotAllocatedRAM & " / " & sRamTot & " (" & rPCRAMUsed.ToString("0.0 %", ci) & ")"
     Return sRam
 
 End Function

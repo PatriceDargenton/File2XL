@@ -152,6 +152,33 @@ Namespace My
                 Return CType(Me("RemoveNULL"),Boolean)
             End Get
         End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("4000")>  _
+        Public ReadOnly Property MaxColumnWidth() As Integer
+            Get
+                Return CType(Me("MaxColumnWidth"),Integer)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("500")>  _
+        Public ReadOnly Property MinColumnWidth() As Integer
+            Get
+                Return CType(Me("MinColumnWidth"),Integer)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public ReadOnly Property LogFile() As Boolean
+            Get
+                Return CType(Me("LogFile"),Boolean)
+            End Get
+        End Property
     End Class
 End Namespace
 

@@ -26,7 +26,7 @@ Public Function Sort(Optional sSorting$ = "") As TValue()
     Next
 
     ' If no sorting is specified, simply return the array
-    If sSorting.Length = 0 Then Return arrayTvalue
+    If String.IsNullOrEmpty(sSorting) Then Return arrayTvalue
 
     ' Sort the dictionary
     Dim comp As New UniversalComparer(Of TValue)(sSorting)

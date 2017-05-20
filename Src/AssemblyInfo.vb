@@ -10,4 +10,8 @@ Imports System.Reflection
 <Assembly: AssemblyProduct("File2XL")> 
 <Assembly: AssemblyCopyright("Copyright © ORS Production 2017")> 
 
-<Assembly: AssemblyVersion("1.0.2.*")> 
+<Assembly: AssemblyVersion("1.0.3.*")> 
+
+<Assembly: Runtime.InteropServices.ComVisible(False)>  ' CA1017 
+<Assembly: CLSCompliant(True)>  ' CA1014
+<Assembly: Resources.NeutralResourcesLanguage("")>  ' CA1824

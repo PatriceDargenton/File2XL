@@ -13,7 +13,7 @@ Public Function iNbOccurrences%(sTxt$, sOcc$)
     Dim iPosMax% = iTxtLen - iOccLen
     Dim iNbOcc%, iPosNew%, iPos%
     While iPos <= iPosMax
-        iPosNew = sTxt.IndexOf(sOcc, iPos)
+        iPosNew = sTxt.IndexOf(sOcc, iPos, StringComparison.Ordinal) ' Ordinal : Exact (binary)
         If iPosNew = -1 Then Exit While
         iNbOcc += 1
         iPos = iPosNew + iOccLen

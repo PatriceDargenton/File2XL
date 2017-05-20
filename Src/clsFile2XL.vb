@@ -24,7 +24,9 @@ Public Class clsPrm
     Public bCreateStandardSheet As Boolean
     Public bPreferMultipleDelimiter As Boolean ' For example, prefer "," to ,
     Public bAutosizeColumns As Boolean
-    Public bRemoveNULL As Boolean ' Replace PhpMyAdmin NULL by empty
+    Public iMinColumnWidth% ' After autozise 20/05/2017
+    Public iMaxColumnWidth% ' After autozise 20/05/2017
+    Public bRemoveNULL As Boolean ' Replace PhpMyAdmin NULL by empty 28/04/2017
 
 End Class
 
@@ -39,7 +41,7 @@ Public Const iNbLinesMaxExcel2003% = 65536
 Public Const iNbLinesMaxExcel2007% = 1048576
 Const iNbColMaxExcel2003% = 256
 Const iNbColMaxExcel2007% = 16384
-Dim m_iNbColMaxExcel% = iNbColMaxExcel2003
+'Dim m_iNbColMaxExcel% = iNbColMaxExcel2003
 Const iNbColMaxAutoFilterExcel2003NPOI% = 255 ' Bug NPOI : il should be 256
 
 Const sMsgNextColumnsIgnored$ = "(File2XL: Next columns have been ignored)"
@@ -68,9 +70,62 @@ Private m_prm As clsPrm
 
 Private m_bDetectColumnType As Boolean
 Private m_splitLines As List(Of List(Of String))
-Public m_lstFields As List(Of clsField)
+Private m_lstFields As List(Of clsField)
+
+#Region "Classes"
+
+Private Class clsFieldType
+    Public Const sNumericC2P$ = "NumericC2P"
+    Public Const sNumericP2C$ = "NumericP2C" ' Period to Comma
+    Public Const sNumeric$ = "Numeric"
+    Public Const sNumericWithQuotes$ = "NumericWithQuotes"
+    Public Const sNumericC2PWithQuotes$ = "NumericC2PWithQuotes"
+    Public Const sNumericP2CWithQuotes$ = "NumericP2CWithQuotes"
+    Public Const sText$ = "Text"
+    Public Const sTextWithQuotes$ = "TextWithQuotes"
+End Class
+
+Private Class clsField
+
+    ' sField and iNumField are used only in debug mode
+    <CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")> _
+    Public sField$, iNumField%
+    Public sType$, iNbOcc%
+    Public bCanEndWithMinus As Boolean = False ' Numeric followed by -
+    Public Sub New(iNumField0%, sField0$, sType0$)
+        iNumField = iNumField0
+        sField = sField0
+        sType = sType0
+        iNbOcc = 1
+    End Sub
+End Class
+
+Private Class clsOcc
+    Public s$
+    Public iNbOcc%, iOccLength%
+
+    ' This field is used in sorting using a string, e.g.: "iWeight DESC, iNbOcc DESC, iOccLength DESC"
+    <CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")>
+    Public iWeight%
+
+    Public Sub New(s0$, iNbOcc0%, bPreferMultipleDelimiter As Boolean)
+        s = s0
+        iNbOcc = iNbOcc0
+        iOccLength = s.Length
+        If bPreferMultipleDelimiter Then
+            iWeight = iNbOcc * iOccLength ' Increase the weight as the delimiter length
+        Else
+            iWeight = iNbOcc
+        End If
+    End Sub
+End Class
+
+#End Region
 
 Public Function bRead(prm As clsPrm, sPath$, delegMsg As clsDelegMsg) As Boolean
+
+    If prm Is Nothing Then Return False
+    If delegMsg Is Nothing Then Return False
 
     m_prm = prm
     If Not m_prm.bUseXls AndAlso Not m_prm.bUseXlsx Then
@@ -243,22 +298,21 @@ Private Sub SetWorkbookStyle(iNumColMax%, bExcel2007 As Boolean)
         iNbColMax = iNbColMaxExcel2003
     End If
 
-    Dim iNumRow0% = 0
-    Dim iNumField0% = 0
-    Dim iNbFieldsAct0% = m_lstFields.Count
-    For Each field In m_lstFields
-        iNumField0 += 1
-        If iNumField0 > row0.Cells.Count AndAlso iNumField0 < iNbColMax Then row0.CreateCell(iNumField0 - 1)
+    For iNumField1 As Integer = 0 To m_lstFields.Count - 1
+        If iNumField1 > row0.Cells.Count - 1 AndAlso iNumField1 < iNbColMax - 1 Then _
+            row0.CreateCell(iNumField1)
     Next
 
     SetRowColor(row0, HSSFColor.Grey25Percent.Index, bExcel2007)
 
+    Dim iMinColumnWidth% = m_prm.iMinColumnWidth
+    Dim iMaxColumnWidth% = m_prm.iMaxColumnWidth
     Const iDisplayRate = 10
-    iNumField0 = 0
+    Dim iNumField0% = 0
     Dim iNbFields0% = row0.Cells.Count
     For Each field In m_lstFields
         iNumField0 += 1
-        If field.sType.StartsWith(clsFieldType.sNumeric) Then
+        If field.sType.StartsWith(clsFieldType.sNumeric, StringComparison.Ordinal) Then
             ' Color header
             If iNumField0 <= iNbFields0 Then
 
@@ -276,16 +330,37 @@ Private Sub SetWorkbookStyle(iNumColMax%, bExcel2007 As Boolean)
                     ' Set same column width on text sheet
                     If bExcel2007 Then
                         m_shXlsx.AutoSizeColumn(iNumField0 - 1) ' AutoFit
-                        If m_prm.bCreateStandardSheet Then
-                            Dim iColWTxt% = m_shXlsx.GetColumnWidth(iNumField0 - 1)
-                            m_shStdrXlsx.SetColumnWidth(iNumField0 - 1, iColWTxt)
+
+                        ' 20/05/2017
+                        Dim iColWTxt% = m_shXlsx.GetColumnWidth(iNumField0 - 1)
+                        If iColWTxt < iMinColumnWidth Then
+                            iColWTxt = iMinColumnWidth
+                            m_shXlsx.SetColumnWidth(iNumField0 - 1, iColWTxt)
                         End If
+                        If iColWTxt > iMaxColumnWidth Then
+                            iColWTxt = iMaxColumnWidth
+                            m_shXlsx.SetColumnWidth(iNumField0 - 1, iColWTxt)
+                        End If
+
+                        If m_prm.bCreateStandardSheet Then _
+                            m_shStdrXlsx.SetColumnWidth(iNumField0 - 1, iColWTxt)
                     Else
                         m_sh.AutoSizeColumn(iNumField0 - 1) ' AutoFit
-                        If m_prm.bCreateStandardSheet Then
-                            Dim iColWTxt% = m_sh.GetColumnWidth(iNumField0 - 1)
-                            m_shStdr.SetColumnWidth(iNumField0 - 1, iColWTxt)
+
+                        ' 20/05/2017
+                        Dim iColWTxt% = m_sh.GetColumnWidth(iNumField0 - 1)
+                        'Debug.WriteLine("iColWTxt(" & iNumField0 & ")=" & iColWTxt)
+                        If iColWTxt < iMinColumnWidth Then
+                            iColWTxt = iMinColumnWidth
+                            m_sh.SetColumnWidth(iNumField0 - 1, iColWTxt)
                         End If
+                        If iColWTxt > iMaxColumnWidth Then
+                            iColWTxt = iMaxColumnWidth
+                            m_sh.SetColumnWidth(iNumField0 - 1, iColWTxt)
+                        End If
+
+                        If m_prm.bCreateStandardSheet Then _
+                            m_shStdr.SetColumnWidth(iNumField0 - 1, iColWTxt)
                     End If
 
                 End If
@@ -304,22 +379,18 @@ Private Sub SetWorkbookStyle(iNumColMax%, bExcel2007 As Boolean)
             row0 = m_shStdr.GetRow(0)
         End If
 
-        Dim iNumRow% = 0
-        Dim iNumField% = 0
-
-        Dim iNbFieldsAct% = m_lstFields.Count
-        For Each field In m_lstFields
-            iNumField += 1
-            If iNumField > row0.Cells.Count AndAlso iNumField0 < iNbColMax Then row0.CreateCell(iNumField - 1)
+        For iNumField1 As Integer = 0 To m_lstFields.Count - 1
+            If iNumField1 > row0.Cells.Count - 1 AndAlso iNumField1 < iNbColMax - 1 Then _
+                row0.CreateCell(iNumField1)
         Next
         SetRowColor(row0, HSSFColor.Grey25Percent.Index, bExcel2007)
 
-        iNumField = 0
+        Dim iNumField% = 0
         Dim iNbFields% = row0.Cells.Count
         For Each field In m_lstFields
             Dim iMemNumField% = iNumField
             iNumField += 1
-            If field.sType.StartsWith(clsFieldType.sNumeric) Then
+            If field.sType.StartsWith(clsFieldType.sNumeric, StringComparison.Ordinal) Then
                 ' Color header
                 If iNumField <= iNbFields Then
                     SetCellColor(row0.Cells(iMemNumField), HSSFColor.BrightGreen.Index, bExcel2007)
@@ -333,22 +404,48 @@ Private Sub SetWorkbookStyle(iNumColMax%, bExcel2007 As Boolean)
                         ' Set same column width on text sheet
                         If bExcel2007 Then
                             m_shStdrXlsx.AutoSizeColumn(iMemNumField) ' AutoFit
-                            Dim iColW% = m_shStdrXlsx.GetColumnWidth(iMemNumField)
+                            Dim iColWStdr% = m_shStdrXlsx.GetColumnWidth(iMemNumField)
                             Dim iColWTxt% = m_shXlsx.GetColumnWidth(iMemNumField)
-                            If iColWTxt < iColW Then
-                                m_shXlsx.SetColumnWidth(iMemNumField, iColW)
-                            ElseIf iColWTxt > iColW Then
-                                m_shStdrXlsx.SetColumnWidth(iMemNumField, iColWTxt)
+                            Dim bResizeStdr As Boolean = False
+                            Dim bResizeTxt As Boolean = False
+                            If iColWStdr > iMaxColumnWidth Then iColWStdr = iMaxColumnWidth : bResizeStdr = True
+                            If iColWTxt > iMaxColumnWidth Then iColWTxt = iMaxColumnWidth : bResizeTxt = True
+                            If iColWStdr < iMinColumnWidth Then iColWStdr = iMinColumnWidth : bResizeStdr = True
+                            If iColWTxt < iMinColumnWidth Then iColWTxt = iMinColumnWidth : bResizeTxt = True
+                            If iColWTxt < iColWStdr Then
+                                'm_shXlsx.SetColumnWidth(iMemNumField, iColWStdr)
+                                iColWTxt = iColWStdr
+                                bResizeTxt = True
+                            ElseIf iColWTxt > iColWStdr Then
+                                'm_shStdrXlsx.SetColumnWidth(iMemNumField, iColWTxt)
+                                iColWStdr = iColWTxt
+                                bResizeStdr = True
                             End If
+                            If bResizeTxt Then m_shXlsx.SetColumnWidth(iMemNumField, iColWTxt)
+                            If bResizeStdr Then m_shStdrXlsx.SetColumnWidth(iMemNumField, iColWStdr)
                         Else
                             m_shStdr.AutoSizeColumn(iMemNumField) ' AutoFit
-                            Dim iColW% = m_shStdr.GetColumnWidth(iMemNumField)
+                            Dim iColWStdr% = m_shStdr.GetColumnWidth(iMemNumField)
                             Dim iColWTxt% = m_sh.GetColumnWidth(iMemNumField)
-                            If iColWTxt < iColW Then
-                                m_sh.SetColumnWidth(iMemNumField, iColW)
-                            ElseIf iColWTxt > iColW Then
-                                m_shStdr.SetColumnWidth(iMemNumField, iColWTxt)
+                            'Debug.WriteLine("iColWStdr(" & iNumField0 & ")=" & iColWStdr)
+                            'Debug.WriteLine("iColWTxt(" & iNumField0 & ")=" & iColWTxt)
+                            Dim bResizeStdr As Boolean = False
+                            Dim bResizeTxt As Boolean = False
+                            If iColWStdr > iMaxColumnWidth Then iColWStdr = iMaxColumnWidth : bResizeStdr = True
+                            If iColWTxt > iMaxColumnWidth Then iColWTxt = iMaxColumnWidth : bResizeTxt = True
+                            If iColWStdr < iMinColumnWidth Then iColWStdr = iMinColumnWidth : bResizeStdr = True
+                            If iColWTxt < iMinColumnWidth Then iColWTxt = iMinColumnWidth : bResizeTxt = True
+                            If iColWTxt < iColWStdr Then
+                                'm_sh.SetColumnWidth(iMemNumField, iColWStdr)
+                                iColWTxt = iColWStdr
+                                bResizeTxt = True
+                            ElseIf iColWTxt > iColWStdr Then
+                                'm_shStdr.SetColumnWidth(iMemNumField, iColWTxt)
+                                iColWStdr = iColWTxt
+                                bResizeStdr = True
                             End If
+                            If bResizeTxt Then m_sh.SetColumnWidth(iMemNumField, iColWTxt)
+                            If bResizeStdr Then m_shStdr.SetColumnWidth(iMemNumField, iColWStdr)
                         End If
 
                     End If
@@ -477,7 +574,7 @@ Private Sub WriteRow(row As IRow, asFields$(), iNbColMaxExcel%, bExcel2007 As Bo
         End If
 
         If iNumField > iNbColMaxExcel - 1 Then
-            Dim val = row.Cells(iNumField - 1)
+            'Dim val = row.Cells(iNumField - 1)
             'Dim sCellVal$ = " " & val.StringCellValue ' 05/06/2016 Exception with NPOI 2.2.1.0 !
             'Dim sCellVal$ = " " & val.RichStringCellValue.String ' 05/06/2016 Idem
             Dim sCellVal$ = "" ' 05/06/2016
@@ -525,7 +622,7 @@ Private Sub WriteRow(row As IRow, asFields$(), iNbColMaxExcel%, bExcel2007 As Bo
                     Dim iMult% = 1
                     If field.bCanEndWithMinus Then
                         Dim sFieldTrim$ = sField.Trim
-                        If sFieldTrim.EndsWith("-") Then
+                        If sFieldTrim.EndsWith("-", StringComparison.Ordinal) Then
                             sFieldConv = sFieldTrim.Substring(0, sFieldTrim.Length - 1)
                             iMult = -1
                         End If
@@ -542,7 +639,7 @@ Private Sub WriteRow(row As IRow, asFields$(), iNbColMaxExcel%, bExcel2007 As Bo
                         End If
                     Else
                         ' Header fields
-                        If field.sType.EndsWith(sPostFixWithQuotes) Then
+                        If field.sType.EndsWith(sPostFixWithQuotes, StringComparison.Ordinal) Then
                             SetCellValue(row.Cells(iNumField), sField.Replace(sQuotes, sEmpty), bExcel2007)
                         Else
                             SetCellValue(row.Cells(iNumField), sField, bExcel2007)
@@ -724,21 +821,6 @@ Private Sub FindProbDelimiter(sDelimiterList$, sDefaultDelimiter$, ByRef sFieldD
 
 End Sub
 
-Private Class clsOcc
-    Public s$
-    Public iNbOcc%, iOccLength%, iWeight%
-    Public Sub New(s0$, iNbOcc0%, bPreferMultipleDelimiter As Boolean)
-        s = s0
-        iNbOcc = iNbOcc0
-        iOccLength = s.Length
-        If bPreferMultipleDelimiter Then
-            iWeight = iNbOcc * iOccLength ' Increase the weight as the delimiter length
-        Else
-            iWeight = iNbOcc
-        End If
-    End Sub
-End Class
-
 Private Sub FindColumnsType(ByRef lstFields As List(Of clsField), ByRef bOnlyTextFields As Boolean)
 
     Const bDebugColType As Boolean = False
@@ -760,12 +842,12 @@ Private Sub FindColumnsType(ByRef lstFields As List(Of clsField), ByRef bOnlyTex
                 Continue For ' Do not count null value
             End If
 
-            Dim sFieldMinus = ""
+            'Dim sFieldMinus = ""
             Dim sFieldTrim$ = sField.Trim
             Dim bEndWithMinus As Boolean = False
-            If sFieldTrim.EndsWith("-") Then
+            If sFieldTrim.EndsWith("-", StringComparison.Ordinal) Then
                 bEndWithMinus = True
-                sFieldMinus = sFieldTrim.Substring(0, sFieldTrim.Length - 1)
+                'sFieldMinus = sFieldTrim.Substring(0, sFieldTrim.Length - 1)
             End If
 
             Dim dic As SortDic(Of String, clsField)
@@ -838,7 +920,7 @@ Private Sub FindColumnsType(ByRef lstFields As List(Of clsField), ByRef bOnlyTex
 
 End Sub
 
-Private Sub AddField(dic As SortDic(Of String, clsField), iNumField%, sFieldName$, sFieldType$)
+Private Shared Sub AddField(dic As SortDic(Of String, clsField), iNumField%, sFieldName$, sFieldType$)
 
     If Not dic.ContainsKey(sFieldType) Then
         Dim field = New clsField(iNumField, sFieldName, sFieldType)

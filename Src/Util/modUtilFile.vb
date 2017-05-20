@@ -116,7 +116,7 @@ Retry:
                 IO.Path.GetFileName(sFilePath) & vbCrLf & sFilePath, sPossibleErrCause)
         End If
     Finally
-        If Not IsNothing(fs) Then fs.Dispose()
+        If fs IsNot Nothing Then fs.Dispose() ' CA2000
     End Try
 
     If answer = MsgBoxResult.Retry Then GoTo Retry
@@ -153,6 +153,11 @@ Public Function GetEncoding(filename As String) As Encoding
 
     ' 08/05/2017
     If bom(0) = 50 AndAlso bom(1) = 48 AndAlso bom(2) = 49 AndAlso bom(3) = 54 Then
+        Return Encoding.UTF8
+    End If
+
+    ' 19/05/2017
+    If bom(0) = 34 AndAlso bom(1) = 105 AndAlso bom(2) = 100 AndAlso bom(3) = 34 Then
         Return Encoding.UTF8
     End If
 
@@ -216,7 +221,7 @@ Public Function asReadFile(sFilePath$, _
         ShowErrorMsg(ex, "asReadFile")
         Return Nothing
     Finally
-        If Not IsNothing(fs) Then fs.Dispose()
+        If fs IsNot Nothing Then fs.Dispose() ' CA2000
     End Try
 
 End Function
@@ -262,11 +267,12 @@ Public Sub StartAssociateApp(sFilePath$, _
     If bCheckFile Then ' Don't check file if it is a URL to browse
         If Not bFileExists(sFilePath, bPrompt:=True) Then Exit Sub
     End If
-    Dim p As New Process
-    p.StartInfo = New ProcessStartInfo(sFilePath)
-    p.StartInfo.Arguments = sArguments
-    If bMaximized Then p.StartInfo.WindowStyle = ProcessWindowStyle.Maximized
-    p.Start()
+    Using p As New Process
+        p.StartInfo = New ProcessStartInfo(sFilePath)
+        p.StartInfo.Arguments = sArguments
+        If bMaximized Then p.StartInfo.WindowStyle = ProcessWindowStyle.Maximized
+        p.Start()
+    End Using
 
 End Sub
 
@@ -473,13 +479,14 @@ Public Function bWriteFile(sFilePath$, sbContenu As StringBuilder, _
     Optional bDefautEncoding As Boolean = True, _
     Optional encode As Encoding = Nothing, _
     Optional bPromptIfErr As Boolean = True, _
+    Optional bAppend As Boolean = False, _
     Optional ByRef sMsgErr$ = "") As Boolean
 
-    If Not bDeleteFile(sFilePath, bPromptIfErr:=True) Then Return False
+    If Not bAppend AndAlso Not bDeleteFile(sFilePath, bPromptIfErr:=True) Then Return False
 
     Try
         If bDefautEncoding Then encode = Encoding.Default
-        Using sw As New IO.StreamWriter(sFilePath, append:=False, Encoding:=encode)
+        Using sw As New IO.StreamWriter(sFilePath, append:=bAppend, Encoding:=encode)
             sw.Write(sbContenu.ToString())
         End Using
         Return True

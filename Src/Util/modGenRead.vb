@@ -140,13 +140,16 @@ Public Function bReadFileGeneric(sFieldDelimiter$, bHeader As Boolean, _
         ' Read line by line
         Dim fs As FileStream = Nothing
         Try
+            Dim ci = Globalization.CultureInfo.CurrentCulture()
             Dim lFileSize& = New IO.FileInfo(sPath).Length
             Dim share As IO.FileShare = IO.FileShare.ReadWrite
             fs = New IO.FileStream(sPath, IO.FileMode.Open, IO.FileAccess.Read, share)
+            Dim lPosition& = 0
             Using sr As New IO.StreamReader(fs, encod)
-                fs = Nothing
+                fs = Nothing ' 19/05/2017 Do not use fs.Position inside this loop
                 Do
                     Dim sLine$ = sr.ReadLine()
+                    lPosition += sLine.Length
                     iNumLine += 1
 
                     If bOnlyFirstLines Then
@@ -171,9 +174,10 @@ Public Function bReadFileGeneric(sFieldDelimiter$, bHeader As Boolean, _
                     End If
 
                     If iNumLine Mod iDisplayRate0 = 0 Then
-                        Dim lFilePos& = fs.Position
+                        'Dim lFilePos& = fs.Position
+                        Dim lFilePos& = lPosition ' 19/05/2017
                         Dim rPC! = 100 * CSng(lFilePos / lFileSize)
-                        Dim sPC$ = iNumLine & " (" & rPC.ToString("0.00") & " %)..."
+                        Dim sPC$ = iNumLine & " (" & rPC.ToString("0.00", ci) & " %)..."
                         Dim sMsg$ = sFile & " lines : " & sPC
                         Dim sLongMsg$ = sPC & vbLf & sPath & vbLf & sRAMInfo()
                         msgDeleg.ShowMsg("Loading : " & sMsg)
@@ -181,12 +185,11 @@ Public Function bReadFileGeneric(sFieldDelimiter$, bHeader As Boolean, _
                         WaitPause(msgDeleg, "Paused : " & sMsg, "Paused : " & sLongMsg)
                         If msgDeleg.m_bCancel Then Return False
                     End If
-
                 Loop While Not sr.EndOfStream
             End Using
             If Not msgDeleg.m_bIgnoreNextLines Then
                 iNbLines = iNumLine
-                Dim sPC1$ = iNumLine & " (" & (100).ToString("0.00") & " %)"
+                Dim sPC1$ = iNumLine & " (" & (100).ToString("0.00", ci) & " %)"
                 Dim sMsg$ = "Loading " & sFile & " lines : " & sPC1
                 Dim sLongMsg$ = "Loading : " & sPC1 & vbLf & sPath & vbLf & sRAMInfo()
                 msgDeleg.ShowMsg(sMsg)
@@ -196,7 +199,9 @@ Public Function bReadFileGeneric(sFieldDelimiter$, bHeader As Boolean, _
             Throw
             Return False
         Finally
-            If Not IsNothing(fs) Then fs.Dispose()
+            ' 19/05/2017 Right code to suppress CA2202 warning, but fs.Position
+            '  cannot be read inside the loop
+            If fs IsNot Nothing Then fs.Dispose() ' CA2000
         End Try
 
     Else

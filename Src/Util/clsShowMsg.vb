@@ -31,12 +31,15 @@ Public Class clsDelegMsg
 
     ' Managing class for messages displayed by the delegate
 
-    Public Delegate Sub ShowMessageDelegate(sender As Object, e As clsMsgEventArgs)
-    Public Event EvShowMessage As ShowMessageDelegate
-    Public Event EvShowLongMessage As ShowMessageDelegate
+    Private Delegate Sub ShowMessageDelegate(sender As Object, e As clsMsgEventArgs)
+    'Public Event EvShowMessage As ShowMessageDelegate
+    Public Event EvShowMessage As EventHandler(Of clsMsgEventArgs)
+    'Public Event EvShowLongMessage As ShowMessageDelegate
+    Public Event EvShowLongMessage As EventHandler(Of clsMsgEventArgs)
 
-    Public Delegate Sub WaitCursorEvHandler(sender As Object, e As clsWaitCursorEventArgs)
-    Public Event EvWaitCursor As WaitCursorEvHandler
+    Private Delegate Sub WaitCursorEvHandler(sender As Object, e As clsWaitCursorEventArgs)
+    'Public Event EvWaitCursor As WaitCursorEvHandler
+    Public Event EvWaitCursor As EventHandler(Of clsWaitCursorEventArgs)
 
     Public m_bPause As Boolean
     Public m_bCancel As Boolean
