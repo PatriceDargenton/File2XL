@@ -4,7 +4,7 @@
 ' Documentation : File2XL.html
 ' http://patrice.dargenton.free.fr/CodesSources/File2XL.html
 ' http://patrice.dargenton.free.fr/CodesSources/File2XL.vbproj.html
-' Version 1.03 - 20/05/2017
+' Version 1.04 - 05/01/2018
 ' By Patrice Dargenton : mailto:patrice.dargenton@free.fr
 ' http://patrice.dargenton.free.fr/index.html
 ' http://patrice.dargenton.free.fr/CodesSources/index.html
@@ -99,7 +99,6 @@ Private Sub Initialization()
     'MsgBox("File2XL : " & sArg0)
     If bDebug Then
         sArg0 = Application.StartupPath & "\Tmp\Test256Col.dat"
-        'sArg0 = Application.StartupPath & "\Tmp\Article_SAP"
     Else
         Me.cmdCreateTestFiles.Visible = False
     End If

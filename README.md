@@ -55,6 +55,9 @@ There is no user interface to configure settings, simply edit the config. file i
 
 #Versions
 
+##Version 1.04 - 05/01/2018
+- Encoding reading : no need to read with write access right, just read access.
+
 ##Version 1.03 - 20/05/2017
 - LogFile setting added : to log conversion time of each file ;
 - Visual Studio 2017 code analysis : almost all rules are respected ;

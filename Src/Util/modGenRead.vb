@@ -149,7 +149,8 @@ Public Function bReadFileGeneric(sFieldDelimiter$, bHeader As Boolean, _
                 fs = Nothing ' 19/05/2017 Do not use fs.Position inside this loop
                 Do
                     Dim sLine$ = sr.ReadLine()
-                    lPosition += sLine.Length
+                    ' 20/08/2017 If Not String.IsNullOrEmpty(sLine) Then 
+                    If Not String.IsNullOrEmpty(sLine) Then lPosition += sLine.Length
                     iNumLine += 1
 
                     If bOnlyFirstLines Then

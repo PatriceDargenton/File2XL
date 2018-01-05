@@ -265,6 +265,11 @@ Public Function bWrite() As Boolean
             If m_bXlsx Then
                 m_wbXlsx.Write(fs)
             Else
+                ' Name conflicts with _FilterDatabase
+                ' (_FilterDatabase : Le nom ne doit pas être identique à un nom prédéfini)
+                'm_wb.Names.Item("_FilterDatabase").Delete()
+                'm_wb.RemoveName("_FilterDatabase")
+                ' ToDo : check if a new version of NPOI is available (retry NuGet package ?)
                 m_wb.Write(fs)
             End If
         End Using
