@@ -14,7 +14,7 @@ Public Sub SetMsgTitle(sMsgTitle$)
     m_sMsgTitle = sMsgTitle
 End Sub
 
-Public Sub ShowErrorMsg(ByRef ex As Exception, _
+Public Sub ShowErrorMsg(ex As Exception, _
     Optional sFunctionTitle$ = "", Optional sInfo$ = "", _
     Optional sDetailedErrMsg$ = "", _
     Optional bCopyErrMsgClipboard As Boolean = True, _

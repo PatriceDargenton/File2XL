@@ -8,9 +8,9 @@ Imports System.Reflection
 <Assembly: AssemblyDescription("File2XL : Open a csv file into MS-Excel with pre-formatted cells")> 
 <Assembly: AssemblyCompany("ORS Production")> 
 <Assembly: AssemblyProduct("File2XL")> 
-<Assembly: AssemblyCopyright("Copyright © ORS Production 2018")> 
+<Assembly: AssemblyCopyright("Copyright © ORS Production 2019")> 
 
-<Assembly: AssemblyVersion("1.0.4.*")> 
+<Assembly: AssemblyVersion("1.0.5.*")> 
 
 <Assembly: Runtime.InteropServices.ComVisible(False)>  ' CA1017 
 <Assembly: CLSCompliant(True)>  ' CA1014

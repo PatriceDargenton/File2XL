@@ -55,6 +55,9 @@ There is no user interface to configure settings, simply edit the config. file i
 
 #Versions
 
+##Version 1.05 - 25/01/2019
+- Detecting UTF8 Encoding : one case added.
+
 ##Version 1.04 - 05/01/2018
 - Encoding reading : no need to read with write access right, just read access.
 
@@ -64,7 +67,6 @@ There is no user interface to configure settings, simply edit the config. file i
 - UTF8 encoding added in encoding detection ;
 - MinColumnWidth and MaxColumnWidth settings added ;
 - Bug fixed (from 1.02 version) : object variable not set : fs.position while fs is null.
-
 
 ##Version 1.02 - 08/05/2017
 - RemoveNULL setting : remove NULL in field value in standard sheet, for example PhpMyAdmin NULL value in csv export ;

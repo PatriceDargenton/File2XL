@@ -134,7 +134,8 @@ Public Function GetEncoding(filename As String) As Encoding
 
     ' Read the BOM
     Dim bom = New Byte(3) {}
-    Using file = New IO.FileStream(filename, IO.FileMode.Open, IO.FileAccess.Read)
+    Using file = New IO.FileStream(filename, IO.FileMode.Open, _
+        IO.FileAccess.Read, IO.FileShare.ReadWrite) ' 05/01/2018 Need only read-only access, not write access
         file.Read(bom, 0, 4)
     End Using
 
@@ -143,6 +144,11 @@ Public Function GetEncoding(filename As String) As Encoding
         Return Encoding.UTF7
     End If
     If bom(0) = &HEF AndAlso bom(1) = &HBB AndAlso bom(2) = &HBF Then
+        Return Encoding.UTF8
+    End If
+
+    ' 25/01/2019
+    If bom(0) = &H4E AndAlso bom(1) = &HC2 AndAlso bom(2) = &HB0 Then
         Return Encoding.UTF8
     End If
 
