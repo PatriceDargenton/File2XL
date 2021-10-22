@@ -132,6 +132,8 @@ End Function
 ''' <returns>The detected encoding.</returns>
 Public Function GetEncoding(filename As String) As Encoding
 
+    ' https://en.wikipedia.org/wiki/Byte_order_mark
+
     ' Read the BOM
     Dim bom = New Byte(3) {}
     Using file = New IO.FileStream(filename, IO.FileMode.Open, _
@@ -178,6 +180,12 @@ Public Function GetEncoding(filename As String) As Encoding
     If bom(0) = 0 AndAlso bom(1) = 0 AndAlso bom(2) = &HFE AndAlso bom(3) = &HFF Then
         Return Encoding.UTF32
     End If
+
+    ' 22/10/2021
+    If bom(0) = 44 AndAlso bom(1) = 34 AndAlso bom(2) = 78 AndAlso bom(3) = 111 Then
+        Return Encoding.UTF8
+    End If
+
     Return Encoding.ASCII
 
 End Function

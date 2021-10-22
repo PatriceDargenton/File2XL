@@ -24,6 +24,7 @@ Excel Text Import Wizard, Csv2Excel, Csv to Excel, Txt2Excel, Txt to Excel, Text
     - [Settings](#settings)
 - [Projects](#projects)
 - [Versions](#versions)
+    - [Version 1.06 - 22/10/2021](#version-106---22102021)
     - [Version 1.05 - 25/01/2019](#version-105---25012019)
     - [Version 1.04 - 05/01/2018](#version-104---05012018)
     - [Version 1.03 - 20/05/2017](#version-103---20052017)
@@ -75,6 +76,9 @@ There is no user interface to configure settings, simply edit the config. file i
 
 
 # Versions
+
+## Version 1.06 - 22/10/2021
+- Detecting UTF8 Encoding : one case added.
 
 ## Version 1.05 - 25/01/2019
 - Detecting UTF8 Encoding : one case added.
