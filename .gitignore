@@ -51,5 +51,4 @@ obj/
 /File2XL.exe
 *.pdb
 /File2XL.xml
-/Tmp
-/Src/clsFile2XL.vb
+Tmp/
