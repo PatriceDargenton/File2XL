@@ -404,7 +404,7 @@ Public Class clsFile2XL
         '  3.934 for NPOI 2.2.1   Nuget     31/05/2016
         '  5.121 for NPOI 2.2.1.0 Dll net20 01/06/2016 https://www.nuget.org/packages/NPOI/2.2.1
         '  4.888 for NPOI 2.2.1.0 Dll net40 01/06/2016 https://www.nuget.org/packages/NPOI/2.2.1
-        '  0.034 for NPOI 2.2.1.1 Dll act   05/06/2016 ???     
+        '  0.034 for NPOI 2.2.1.1 Dll act   05/06/2016 Optimized version: maxRows for GetColumnWidth
         '  3.760 for NPOI 2.5.5   Nuget     24/10/2021 https://www.nuget.org/packages/NPOI/2.5.5
         '  3.517 for NPOI 1.2.3   Nuget     24/11/2020 https://www.nuget.org/packages/DotNetCore.NPOI/1.2.3
         sMsg = "Time for AutoSizeColumn: " & rTime.ToString("0.000")
