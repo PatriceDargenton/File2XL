@@ -46,4 +46,10 @@ Network Trash Folder
 Temporary Items
 .apdisk
 obj/
-.vs/File2XL/v16/.suo
+.vs/
+*.suo
+/File2XL.exe
+*.pdb
+/File2XL.xml
+/Tmp
+/Src/clsFile2XL.vb
