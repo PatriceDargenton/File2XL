@@ -52,3 +52,7 @@ obj/
 *.pdb
 /File2XL.xml
 Tmp/
+/File2XL.exe
+/ICSharpCode.SharpZipLib.dll
+/NPOI.OpenXml4Net.dll
+/NPOI.OpenXmlFormats.dll
