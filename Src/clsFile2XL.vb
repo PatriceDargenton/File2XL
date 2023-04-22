@@ -35,6 +35,7 @@ Public Class clsFile2XL
     Public m_bXlsx As Boolean = False
     Public m_sDestPathXls$, m_sDestPathXlsx$
     Public m_bOnlyTextFields As Boolean = True ' Check if there are only text fields or not, and store them here
+    Public m_sb As StringBuilder
 
     Public Const iNbCarMaxCell% = 32767
     Public Const iNbLinesMaxExcel2003% = 65536
@@ -140,11 +141,13 @@ Public Class clsFile2XL
         If Not bFileIsWritable(m_sDestPathXls, bNonExistentOk:=True, bPromptRetry:=True) Then Return False
         If Not bFileIsWritable(m_sDestPathXlsx, bNonExistentOk:=True, bPromptRetry:=True) Then Return False
 
-        Dim encod = GetEncoding(sPath)
+        'Dim encod = GetEncoding(sPath)
         ' If encoding is ASCII, set the Latin alphabet to preserve for example accents
         ' Default = System.Text.SBCSCodePageEncoding = Encoding.GetEncoding(1252)
-        If encod Is Encoding.ASCII Then encod = Encoding.Default
+        'If encod Is Encoding.ASCII Then encod = Encoding.Default
+        Dim encod = GetEncodingTEC(sPath) ' 15/07/2022
 
+        m_sb = New StringBuilder
         delegMsg.ShowMsg("Reading first lines...")
         m_lines = New List(Of String)
         Dim bHeader As Boolean
@@ -167,7 +170,7 @@ Public Class clsFile2XL
             bOnlyFirstSplitLines:=True, encod:=encod, iNbLinesAnalyzed:=prm.iNbLinesAnalyzed) Then Return False
         m_bDetectColumnType = False
         delegMsg.ShowMsg("Searching columns type...")
-        FindColumnsType(m_lstFields, m_bOnlyTextFields)
+        FindColumnsType(m_lstFields, m_bOnlyTextFields, delegMsg)
         If m_bOnlyTextFields Then m_prm.bCreateStandardSheet = False
 
         delegMsg.ShowMsg("Initializing Excel library...")
@@ -266,7 +269,7 @@ Public Class clsFile2XL
                     m_wbXlsx.Write(fs)
                 Else
                     ' Name conflicts with _FilterDatabase
-                    ' (_FilterDatabase : Le nom ne doit pas être identique à un nom prédéfini)
+                    ' (_FilterDatabase: The name must not be identical to a predefined name)
                     'm_wb.Names.Item("_FilterDatabase").Delete()
                     'm_wb.RemoveName("_FilterDatabase")
                     ' ToDo : check if a new version of NPOI is available (retry NuGet package ?)
@@ -303,13 +306,26 @@ Public Class clsFile2XL
             iNbColMax = iNbColMaxExcel2003
         End If
 
+        Dim dTimeStart = Now()
         For iNumField1 As Integer = 0 To m_lstFields.Count - 1
             If iNumField1 > row0.Cells.Count - 1 AndAlso iNumField1 < iNbColMax - 1 Then _
                 row0.CreateCell(iNumField1)
         Next
+        Dim dTimeEnd = Now()
+        Dim ts = dTimeEnd - dTimeStart
+        Dim sMsg$ = "Time for CreateCell: " & ts.TotalSeconds.ToString("0.000")
+        If bDebug Then Debug.WriteLine(sMsg)
+        m_sb.AppendLine(sMsg)
 
+        dTimeStart = Now()
         SetRowColor(row0, HSSFColor.Grey25Percent.Index, bExcel2007)
+        dTimeEnd = Now()
+        ts = dTimeEnd - dTimeStart
+        sMsg = "Time for SetRowColor: " & ts.TotalSeconds.ToString("0.000")
+        If bDebug Then Debug.WriteLine(sMsg)
+        m_sb.AppendLine(sMsg)
 
+        Dim rTime# = 0
         Dim iMinColumnWidth% = m_prm.iMinColumnWidth
         Dim iMaxColumnWidth% = m_prm.iMaxColumnWidth
         Const iDisplayRate = 10
@@ -350,7 +366,12 @@ Public Class clsFile2XL
                             If m_prm.bCreateStandardSheet Then _
                                 m_shStdrXlsx.SetColumnWidth(iNumField0 - 1, iColWTxt)
                         Else
+
+                            dTimeStart = Now()
                             m_sh.AutoSizeColumn(iNumField0 - 1) ' AutoFit
+                            dTimeEnd = Now()
+                            ts = dTimeEnd - dTimeStart
+                            rTime += ts.TotalSeconds
 
                             ' 20/05/2017
                             Dim iColWTxt% = m_sh.GetColumnWidth(iNumField0 - 1)
@@ -365,7 +386,7 @@ Public Class clsFile2XL
                             End If
 
                             If m_prm.bCreateStandardSheet Then _
-                                m_shStdr.SetColumnWidth(iNumField0 - 1, iColWTxt)
+                            m_shStdr.SetColumnWidth(iNumField0 - 1, iColWTxt)
                         End If
 
                     End If
@@ -373,6 +394,22 @@ Public Class clsFile2XL
                 End If
             End If
         Next
+
+        ' Time for AutoSizeColumn:
+        ' --     for NPOI 1.2.5   Nuget     29/07/2012 (no Excel 2007 support)
+        ' 39.174 for NPOI 2.0.6   Nuget     12/04/2014
+        ' 42.800 for NPOI 2.1.3   Nuget     31/12/2014
+        ' 45.601 for NPOI 2.1.3.1 Dll net40 23/02/2015 https://www.nuget.org/packages/NPOI/2.1.3.1
+        ' 38.790 for NPOI 2.1.3.1 Nuget     23/02/2015 https://www.nuget.org/packages/NPOI/2.1.3.1
+        '  3.934 for NPOI 2.2.1   Nuget     31/05/2016
+        '  5.121 for NPOI 2.2.1.0 Dll net20 01/06/2016 https://www.nuget.org/packages/NPOI/2.2.1
+        '  4.888 for NPOI 2.2.1.0 Dll net40 01/06/2016 https://www.nuget.org/packages/NPOI/2.2.1
+        '  0.034 for NPOI 2.2.1.1 Dll act   05/06/2016 ???     
+        '  3.760 for NPOI 2.5.5   Nuget     24/10/2021 https://www.nuget.org/packages/NPOI/2.5.5
+        '  3.517 for NPOI 1.2.3   Nuget     24/11/2020 https://www.nuget.org/packages/DotNetCore.NPOI/1.2.3
+        sMsg = "Time for AutoSizeColumn: " & rTime.ToString("0.000")
+        If bDebug Then Debug.WriteLine(sMsg)
+        m_sb.AppendLine(sMsg)
 
         If m_prm.bCreateStandardSheet Then
 
@@ -826,7 +863,8 @@ Public Class clsFile2XL
 
     End Sub
 
-    Private Sub FindColumnsType(ByRef lstFields As List(Of clsField), ByRef bOnlyTextFields As Boolean)
+    Private Sub FindColumnsType(ByRef lstFields As List(Of clsField), ByRef bOnlyTextFields As Boolean,
+            delegMsg As clsDelegMsg)
 
         Const bDebugColType As Boolean = False
 
@@ -836,8 +874,13 @@ Public Class clsFile2XL
         Dim lstNameOfFields As New List(Of String)
         Dim lstMinusExistsForFields As New List(Of Boolean)
 
+        Dim rTime# = 0
         Dim iNumLine% = 0
         For Each sLine In m_splitLines
+
+            delegMsg.ShowMsg("Searching columns type... " & iNumLine + 1 & "/" & m_splitLines.Count)
+            If delegMsg.m_bCancel Then delegMsg.m_bCancel = False : Exit For
+
             If bDebugColType Then Debug.WriteLine("iNumLine=" & iNumLine + 1)
             Dim iNumField% = 0
             For Each sField In sLine
@@ -876,6 +919,7 @@ Public Class clsFile2XL
                     End If
                 End If
 
+                Dim dTimeStart = Now()
                 If IsNumeric(sField) Then
                     AddField(dic, iNumField, sFieldName, clsFieldType.sNumeric)
                 ElseIf IsNumeric(sField.Replace(sPeriod, sComma)) Then
@@ -893,12 +937,20 @@ Public Class clsFile2XL
                 Else
                     AddField(dic, iNumField, sFieldName, clsFieldType.sText)
                 End If
+                Dim dTimeEnd = Now()
+                Dim ts = dTimeEnd - dTimeStart
+                rTime += ts.TotalSeconds
 
                 If bDebugColType Then Debug.WriteLine(sFieldName & "=" & sField)
                 iNumField += 1
             Next
             iNumLine += 1
         Next
+
+        ' IsNumeric is slow in Debug mode for old version of Visual Studio (2013)
+        Dim sMsg$ = "Time for IsNumeric: " & rTime.ToString("0.000")
+        If bDebugColType Then Debug.WriteLine(sMsg)
+        m_sb.AppendLine(sMsg)
 
         lstFields = New List(Of clsField)
         Dim iNumField2% = 0

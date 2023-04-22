@@ -134,10 +134,76 @@ Retry:
 
         ' https://en.wikipedia.org/wiki/Byte_order_mark
 
+        ' UTF-16 Big    Endian: FE FF
+        ' UTF-16 Little Endian: FF FE
+
+        ' UTF-8 : EF BB BF
+        ' SCSU  : 0E FE FF
+        ' BOCU-1: FB EE 28
+        ' UTF-1 : F7 64 4C
+
+        ' UTF-32 Big    Endian: 00 00 FE FF
+        ' UTF-32 Little Endian: FF FE 00 00
+        ' UTF-EBCDIC          : DD 73 66 73
+        ' UTF-7               : 2B 2F 76 and one of the following bytes:
+        '                              [ 38 | 39 | 2B | 2F ]
+
         ' Read the BOM
         Dim bom = New Byte(3) {}
         Using file = New IO.FileStream(filename, IO.FileMode.Open,
-            IO.FileAccess.Read, IO.FileShare.ReadWrite) ' 05/01/2018 Need only read-only access, not write access
+                IO.FileAccess.Read, IO.FileShare.ReadWrite) ' 05/01/2018 Need only read-only access, not write access
+            file.Read(bom, 0, 4)
+        End Using
+
+        ' Analyze the BOM
+        ' UTF-16 Big Endian : FE FF
+        ' UTF-16 Little Endian : FF FE
+        If bom(0) = &HFE AndAlso bom(1) = &HFF Then Return Encoding.BigEndianUnicode ' UTF-16
+        If bom(0) = &HFF AndAlso bom(1) = &HFE Then Return Encoding.Unicode
+
+        ' UTF-8 : EF BB BF
+        ' SCSU : 0E FE FF
+        ' BOCU-1 : FB EE 28
+        ' UTF-1 : F7 64 4C
+        If bom(0) = &HEF AndAlso bom(1) = &HBB AndAlso bom(2) = &HBF Then Return Encoding.UTF8
+        'If bom(0) = &H0E AndAlso bom(1) = &HFE AndAlso bom(2) = &HFF Then Return Encoding.SCSU
+        'If bom(0) = &HFB AndAlso bom(1) = &HEE AndAlso bom(2) = &H28 Then Return Encoding.BOCU-1
+        'If bom(0) = &HF7 AndAlso bom(1) = &H64 AndAlso bom(2) = &H4C Then Return Encoding.UTF-1
+
+        ' UTF-32 Big    Endian: 00 00 FE FF
+        ' UTF-32 Little Endian: FF FE 00 00
+        ' UTF-EBCDIC          : DD 73 66 73
+        ' UTF-7               : 2B 2F 76 and one of the following bytes:
+        '                              [ 38 | 39 | 2B | 2F ]
+        If bom(0) = &H0 AndAlso bom(1) = &H0 AndAlso bom(2) = &HFE AndAlso bom(3) = &HFF Then
+            'Return Encoding.BigEndianUnicode : UTF16<>UTF32
+        End If
+        If bom(0) = &HFF AndAlso bom(1) = &HFE AndAlso bom(2) = &H0 AndAlso bom(3) = &H0 Then
+            Return Encoding.UTF32
+        End If
+        If bom(0) = &HDD AndAlso bom(1) = &H73 AndAlso bom(2) = &H66 AndAlso bom(3) = &H73 Then
+            'Return Encoding.UTF-EBCDIC
+        End If
+        If bom(0) = &H2B AndAlso bom(1) = &H2F AndAlso bom(2) = &H76 AndAlso
+            (bom(3) = &H38 OrElse
+             bom(3) = &H39 OrElse
+             bom(3) = &H2B OrElse
+             bom(3) = &H2F) Then
+            Return Encoding.UTF7
+        End If
+
+        Return Encoding.ASCII
+
+    End Function
+
+    Public Function GetEncodingPreviousVersion(filename As String) As Encoding
+
+        ' https://en.wikipedia.org/wiki/Byte_order_mark
+
+        ' Read the BOM
+        Dim bom = New Byte(3) {}
+        Using file = New IO.FileStream(filename, IO.FileMode.Open,
+                IO.FileAccess.Read, IO.FileShare.ReadWrite) ' 05/01/2018 Need only read-only access, not write access
             file.Read(bom, 0, 4)
         End Using
 
@@ -190,6 +256,52 @@ Retry:
 
     End Function
 
+    ''' <summary>
+    ''' Determines a text file's encoding by analyzing its Byte Order Mark (BOM).
+    ''' Defaults to ASCII when detection of the text file's endianness fails.
+    ''' </summary>
+    ''' <param name="filename">The text file to analyze.</param>
+    ''' <returns>The detected encoding.</returns>
+    Public Function GetEncodingTEC(filename As String) As Encoding
+
+        ' Version using text-encoding-detect:
+        ' https://github.com/AutoItConsulting/text-encoding-detect
+
+        Dim buffer As Byte()
+        Try
+            ' No, avoid reading all bytes, there may be large files
+            'buffer = IO.File.ReadAllBytes(sChemin)
+            buffer = abReadFile(filename, iMaxSizeBytes:=1000)
+
+            Dim textDetect As New TextEncodingDetect()
+            Dim encodingAutoIt As TextEncodingDetect.Encoding =
+                textDetect.DetectEncoding(buffer, buffer.Length)
+            Select Case encodingAutoIt
+                Case TextEncodingDetect.Encoding.None
+                Case TextEncodingDetect.Encoding.Ansi
+                Case TextEncodingDetect.Encoding.Ascii
+                    Return Encoding.ASCII
+                Case TextEncodingDetect.Encoding.Utf8Bom
+                    Return Encoding.UTF8
+                Case TextEncodingDetect.Encoding.Utf8Nobom
+                    Return Encoding.UTF8
+                Case TextEncodingDetect.Encoding.Utf16BeBom
+                    Return Encoding.BigEndianUnicode
+                Case TextEncodingDetect.Encoding.Utf16BeNoBom
+                    Return Encoding.BigEndianUnicode
+                Case TextEncodingDetect.Encoding.Utf16LeBom
+                    Return Encoding.Unicode
+                Case TextEncodingDetect.Encoding.Utf16LeNoBom
+                    Return Encoding.Unicode
+            End Select
+
+        Catch
+        End Try
+
+        Return Encoding.ASCII
+
+    End Function
+
     Public Function asReadFile(sFilePath$,
         Optional bReadOnly As Boolean = False,
         Optional bCheckCrCrLf As Boolean = False,
@@ -236,6 +348,40 @@ Retry:
             Return Nothing
         Finally
             If fs IsNot Nothing Then fs.Dispose() ' CA2000
+        End Try
+
+    End Function
+
+    Private Function abReadFile(sChemin$, Optional iMaxSizeBytes% = -1) As Byte()
+
+        ' Read a file in binary mode, like ReadAllBytes, but only
+        '  the beginning of the file (the first 1000 bytes)
+
+        Dim abBuffer As Byte()
+        Try
+
+            ' If we do not specify a size limit, then we read everything
+            If iMaxSizeBytes <= 0 Then
+                abBuffer = IO.File.ReadAllBytes(sChemin)
+                Return abBuffer
+            End If
+
+            ' If we only need to read the header in binary mode, then limit the reading
+            Using flux As IO.FileStream = IO.File.Open(sChemin, IO.FileMode.Open)
+                abBuffer = New Byte(iMaxSizeBytes - 1) {}
+                Dim iNbOctetsLus% = flux.Read(abBuffer, 0, iMaxSizeBytes)
+                If iNbOctetsLus <= 0 Then Return abBuffer
+                Dim bufferDest As Byte()
+                bufferDest = New Byte(iNbOctetsLus - 1) {}
+                Array.Copy(abBuffer, bufferDest, iNbOctetsLus)
+                Return bufferDest
+            End Using
+
+            Return abBuffer
+
+        Catch ex As Exception
+            ShowErrorMsg(ex, "abReadFile")
+            Return Nothing
         End Try
 
     End Function

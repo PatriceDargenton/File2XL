@@ -11,7 +11,8 @@
     <AssemblyName>File2XL</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -102,6 +103,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Src\AssemblyInfo.vb" />
+    <Compile Include="Src\Util\modEncoding.vb" />
     <Compile Include="Src\Util\modGenRead.vb" />
     <Compile Include="Src\Util\modUtil.vb" />
     <Compile Include="Src\Util\modUtilFile.vb" />
@@ -109,6 +111,7 @@
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>

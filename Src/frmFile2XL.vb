@@ -4,7 +4,7 @@
 ' Documentation : File2XL.html
 ' http://patrice.dargenton.free.fr/CodesSources/File2XL.html
 ' http://patrice.dargenton.free.fr/CodesSources/File2XL.vbproj.html
-' Version 1.06 - 22/10/2021
+' Version 1.07 - 22/04/2023
 ' By Patrice Dargenton : mailto:patrice.dargenton@free.fr
 ' http://patrice.dargenton.free.fr/index.html
 ' http://patrice.dargenton.free.fr/CodesSources/index.html
@@ -189,6 +189,7 @@ EndSub:
                 sb.AppendLine()
                 sb.AppendLine(sTime)
                 sb.AppendLine("  -> " & sPath)
+                sb.Append(m_f2xl.m_sb)
                 Dim sLogPath$ = Application.StartupPath & "\File2XL.log"
                 bWriteFile(sLogPath, sb, bAppend:=True)
             End If
@@ -360,10 +361,10 @@ QuitNow:
         If Me.WindowState <> FormWindowState.Minimized Then
             TruncateChildTextAccordingToControlWidth(Me.ToolStripLabel1, Me, appendEllipsis:=True)
             Dim iLong% = Me.ToolStripLabel1.Text.Length
-            If iLong < 30 AndAlso iLong < sMsg.Length Then
+            If iLong < 30 AndAlso iLong < sMsg.Length And bDebug Then
                 Debug.WriteLine(sMsg & " -> ")
                 Debug.WriteLine(Me.ToolStripLabel1.Text)
-                If bDebug Then Stop
+                Stop
             End If
         End If
         Application.DoEvents() ' Required
