@@ -77,24 +77,24 @@ Module modGenericReading
 
 #End Region
 
-    Public Function bReadFileGenericSmart(sFieldDelimiter$, bHeader As Boolean,
-        sPath$, delegLine As clsDelegLine, msgDeleg As clsDelegMsg,
-        ByRef iNbLines%, ByRef iNbColumns%) As Boolean
+    'Public Function bReadFileGenericSmart(sFieldDelimiter$, bHeader As Boolean,
+    '    sPath$, delegLine As clsDelegLine, msgDeleg As clsDelegMsg,
+    '    ByRef iNbLines%, ByRef iNbColumns%) As Boolean
 
-        Dim encod = GetEncoding(sPath)
-        ' If encoding is ASCII, set the Latin alphabet to preserve for example accents
-        ' Default = System.Text.SBCSCodePageEncoding = Encoding.GetEncoding(1252)
-        If encod Is Encoding.ASCII Then encod = Encoding.Default
+    '    Dim encod = GetEncoding(sPath)
+    '    ' If encoding is ASCII, set the Latin alphabet to preserve for example accents
+    '    ' Default = System.Text.SBCSCodePageEncoding = Encoding.GetEncoding(1252)
+    '    If encod Is Encoding.ASCII Then encod = Encoding.Default
 
-        ' From 10 Mb read line by line
-        Dim lTailleFic& = New IO.FileInfo(sPath).Length
-        Dim bLineByLineMode As Boolean = False
-        If lTailleFic > iBigFileSizeMb Then bLineByLineMode = True
+    '    ' From 10 Mb read line by line
+    '    Dim lTailleFic& = New IO.FileInfo(sPath).Length
+    '    Dim bLineByLineMode As Boolean = False
+    '    If lTailleFic > iBigFileSizeMb Then bLineByLineMode = True
 
-        Return bReadFileGeneric(sFieldDelimiter, bHeader, sPath, delegLine, msgDeleg,
-            iNbLines, iNbColumns, bLineByLineMode, encod:=encod)
+    '    Return bReadFileGeneric(sFieldDelimiter, bHeader, sPath, delegLine, msgDeleg,
+    '        iNbLines, iNbColumns, bLineByLineMode, encod:=encod)
 
-    End Function
+    'End Function
 
     Public Function bReadFileGeneric(sFieldDelimiter$, bHeader As Boolean,
         sPath$, lineDeleg As clsDelegLine, msgDeleg As clsDelegMsg,
@@ -104,6 +104,11 @@ Module modGenericReading
         Optional bOnlyFirstSplitLines As Boolean = False,
         Optional encod As Encoding = Nothing,
         Optional iNbLinesAnalyzed% = 10) As Boolean
+
+        ' 29/04/2023
+        If encod Is Nothing Then Return bReadFileGenericDetectEncoding(
+            sFieldDelimiter, bHeader, sPath, lineDeleg, msgDeleg, iNbLines, iNbColumns,
+            bOnlyFirstLines, bOnlyFirstSplitLines, iNbLinesAnalyzed)
 
         iNbLines = -1 ' -1 = Not started
 
@@ -232,6 +237,114 @@ Module modGenericReading
             Next
 
         End If
+
+        If bHeader AndAlso iNbLines > 0 Then iNbLines -= 1
+
+        msgDeleg.ShowMsg(sMsgDone)
+        msgDeleg.ShowLongMsg(sMsgDone)
+
+        Return True
+
+    End Function
+
+    Public Function bReadFileGenericDetectEncoding(sFieldDelimiter$, bHeader As Boolean,
+        sPath$, lineDeleg As clsDelegLine, msgDeleg As clsDelegMsg,
+        ByRef iNbLines%, ByRef iNbColumns%,
+        Optional bOnlyFirstLines As Boolean = False,
+        Optional bOnlyFirstSplitLines As Boolean = False,
+        Optional iNbLinesAnalyzed% = 10) As Boolean
+
+        iNbLines = -1 ' -1 = Not started
+
+        Dim sFile$ = IO.Path.GetFileName(sPath)
+        Dim sMsg0$ = "Loading " & sFile & "..."
+        msgDeleg.ShowMsg(sMsg0)
+        Dim sMsg1$ = "Loading..." & vbLf & sPath
+        msgDeleg.ShowLongMsg(sMsg1)
+
+        If Not bFileExists(sPath, bPrompt:=True) Then Return False
+
+        Dim bQuotesDelimiter As Boolean = False
+        If sFieldDelimiter = sQuotesCommaQuotesDelimiter OrElse
+           sFieldDelimiter = sQuotesSemiColonQuotesDelimiter Then bQuotesDelimiter = True
+
+        Dim iNumLine% = 0
+        Dim iDisplayRate0% = iDisplayRate
+        If iNbColumns > 0 Then
+            Select Case iNbColumns
+                Case 1 To 5 : iDisplayRate0 = 10000
+                Case 6 To 10 : iDisplayRate0 = iDisplayRate
+                Case 11 To 50 : iDisplayRate0 = 500
+                Case 51 To 100 : iDisplayRate0 = 100
+                Case 101 To 1000 : iDisplayRate0 = 10
+                Case Else
+                    iDisplayRate0 = 1
+            End Select
+        End If
+
+        ' Read line by line, and detect encoding
+        Dim fs As FileStream = Nothing
+        Try
+            Dim ci = Globalization.CultureInfo.CurrentCulture()
+            Dim lFileSize& = New IO.FileInfo(sPath).Length
+            Dim share As IO.FileShare = IO.FileShare.ReadWrite
+            fs = New IO.FileStream(sPath, IO.FileMode.Open, IO.FileAccess.Read, share)
+            Dim lPosition& = 0
+            Using sr As New IO.StreamReader(fs, detectEncodingFromByteOrderMarks:=True)
+                fs = Nothing ' Do not use fs.Position inside this loop
+                Do
+                    Dim sLine$ = sr.ReadLine()
+                    If Not String.IsNullOrEmpty(sLine) Then lPosition += sLine.Length
+                    iNumLine += 1
+
+                    If bOnlyFirstLines Then
+                        If iNumLine > iNbLinesAnalyzed Then Return True
+                        If IsNothing(sLine) Then Continue Do
+                        lineDeleg.NewLine(sLine)
+                        Continue Do
+                    End If
+
+                    If bHeader AndAlso Not bOnlyFirstLines AndAlso iNumLine = 1 Then Continue Do ' Header
+
+                    If msgDeleg.m_bIgnoreNextLines Then Exit Do
+                    If IsNothing(sLine) Then Continue Do
+
+                    Dim iNbColumns0% = 0
+                    lineDeleg.NewSplitLine(sLine, sFieldDelimiter, bQuotesDelimiter, iNbColumns0)
+                    If iNbColumns0 > iNbColumns Then iNbColumns = iNbColumns0
+
+                    If bOnlyFirstSplitLines Then
+                        If iNumLine > iNbLinesAnalyzed Then Return True
+                        Continue Do
+                    End If
+
+                    If iNumLine Mod iDisplayRate0 = 0 Then
+                        Dim lFilePos& = lPosition
+                        Dim rPC! = 100 * CSng(lFilePos / lFileSize)
+                        Dim sPC$ = iNumLine & " (" & rPC.ToString("0.00", ci) & " %)..."
+                        Dim sMsg$ = sFile & " lines : " & sPC
+                        Dim sLongMsg$ = sPC & vbLf & sPath & vbLf & sRAMInfo()
+                        msgDeleg.ShowMsg("Loading : " & sMsg)
+                        msgDeleg.ShowLongMsg("Loading : " & sLongMsg)
+                        WaitPause(msgDeleg, "Paused : " & sMsg, "Paused : " & sLongMsg)
+                        If msgDeleg.m_bCancel Then Return False
+                    End If
+                Loop While Not sr.EndOfStream
+            End Using
+            If Not msgDeleg.m_bIgnoreNextLines Then
+                iNbLines = iNumLine
+                Dim sPC1$ = iNumLine & " (" & (100).ToString("0.00", ci) & " %)"
+                Dim sMsg$ = "Loading " & sFile & " lines : " & sPC1
+                Dim sLongMsg$ = "Loading : " & sPC1 & vbLf & sPath & vbLf & sRAMInfo()
+                msgDeleg.ShowMsg(sMsg)
+                msgDeleg.ShowLongMsg(sLongMsg)
+            End If
+        Catch ex As Exception
+            Throw
+            Return False
+        Finally
+            If fs IsNot Nothing Then fs.Dispose()
+        End Try
 
         If bHeader AndAlso iNbLines > 0 Then iNbLines -= 1
 

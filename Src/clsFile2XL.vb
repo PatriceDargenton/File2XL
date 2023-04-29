@@ -10,6 +10,7 @@ Imports NPOI.SS.Util ' For CellRangeAddress
 Imports NPOI.SS.UserModel ' For FillPattern
 Imports NPOI.HSSF.Util ' For HSSFColor
 Imports System.Runtime.CompilerServices ' For MethodImpl(MethodImplOptions.AggressiveInlining)
+Imports System.Drawing.Imaging
 
 Public Class clsPrm
 
@@ -145,7 +146,8 @@ Public Class clsFile2XL
         ' If encoding is ASCII, set the Latin alphabet to preserve for example accents
         ' Default = System.Text.SBCSCodePageEncoding = Encoding.GetEncoding(1252)
         'If encod Is Encoding.ASCII Then encod = Encoding.Default
-        Dim encod = GetEncodingTEC(sPath) ' 15/07/2022
+        'Dim encod = GetEncodingTEC(sPath) ' 15/07/2022
+        Dim encod As Encoding = Nothing ' 29/04/2023 Force detectEncodingFromByteOrderMarks version
 
         m_sb = New StringBuilder
         delegMsg.ShowMsg("Reading first lines...")
