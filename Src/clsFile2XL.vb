@@ -28,6 +28,7 @@ Public Class clsPrm
     Public iMinColumnWidth% ' After autozise 20/05/2017
     Public iMaxColumnWidth% ' After autozise 20/05/2017
     Public bRemoveNULL As Boolean ' Replace PhpMyAdmin NULL by empty 28/04/2017
+    Public bLogFile As Boolean ' 30/04/2023
 
 End Class
 
@@ -36,7 +37,7 @@ Public Class clsFile2XL
     Public m_bXlsx As Boolean = False
     Public m_sDestPathXls$, m_sDestPathXlsx$
     Public m_bOnlyTextFields As Boolean = True ' Check if there are only text fields or not, and store them here
-    Public m_sb As StringBuilder
+    Public m_sb As New StringBuilder
 
     Public Const iNbCarMaxCell% = 32767
     Public Const iNbLinesMaxExcel2003% = 65536
@@ -149,7 +150,7 @@ Public Class clsFile2XL
         'Dim encod = GetEncodingTEC(sPath) ' 15/07/2022
         Dim encod As Encoding = Nothing ' 29/04/2023 Force detectEncodingFromByteOrderMarks version
 
-        m_sb = New StringBuilder
+        'm_sb = New StringBuilder
         delegMsg.ShowMsg("Reading first lines...")
         m_lines = New List(Of String)
         Dim bHeader As Boolean
@@ -315,7 +316,7 @@ Public Class clsFile2XL
         Next
         Dim dTimeEnd = Now()
         Dim ts = dTimeEnd - dTimeStart
-        Dim sMsg$ = "Time for CreateCell: " & ts.TotalSeconds.ToString("0.000")
+        Dim sMsg$ = "Time (sec) for CreateCell: " & ts.TotalSeconds.ToString("0.000")
         If bDebug Then Debug.WriteLine(sMsg)
         m_sb.AppendLine(sMsg)
 
@@ -323,7 +324,7 @@ Public Class clsFile2XL
         SetRowColor(row0, HSSFColor.Grey25Percent.Index, bExcel2007)
         dTimeEnd = Now()
         ts = dTimeEnd - dTimeStart
-        sMsg = "Time for SetRowColor: " & ts.TotalSeconds.ToString("0.000")
+        sMsg = "Time (sec) for SetRowColor: " & ts.TotalSeconds.ToString("0.000")
         If bDebug Then Debug.WriteLine(sMsg)
         m_sb.AppendLine(sMsg)
 
@@ -397,7 +398,7 @@ Public Class clsFile2XL
             End If
         Next
 
-        ' Time for AutoSizeColumn:
+        ' Time (sec) for AutoSizeColumn:
         ' --     for NPOI 1.2.5   Nuget     29/07/2012 (no Excel 2007 support)
         ' 39.174 for NPOI 2.0.6   Nuget     12/04/2014
         ' 42.800 for NPOI 2.1.3   Nuget     31/12/2014
@@ -409,7 +410,7 @@ Public Class clsFile2XL
         '  0.034 for NPOI 2.2.1.1 Dll act   05/06/2016 Optimized version: maxRows for GetColumnWidth
         '  3.760 for NPOI 2.5.5   Nuget     24/10/2021 https://www.nuget.org/packages/NPOI/2.5.5
         '  3.517 for NPOI 1.2.3   Nuget     24/11/2020 https://www.nuget.org/packages/DotNetCore.NPOI/1.2.3
-        sMsg = "Time for AutoSizeColumn: " & rTime.ToString("0.000")
+        sMsg = "Time (sec) for AutoSizeColumn: " & rTime.ToString("0.000")
         If bDebug Then Debug.WriteLine(sMsg)
         m_sb.AppendLine(sMsg)
 
@@ -779,6 +780,13 @@ Public Class clsFile2XL
     Private Sub FindProbDelimiter(sDelimiterList$, sDefaultDelimiter$, ByRef sFieldDelimiter$)
 
         Const bDebugSort As Boolean = False
+        'If m_prm.bLogFile Then bDebugSort = True
+        Dim sb As New StringBuilder
+        If m_prm.bLogFile Then
+            Dim sMsg$ = "PreferMultipleDelimiter = " & m_prm.bPreferMultipleDelimiter
+            Debug.WriteLine(sMsg)
+            sb.AppendLine(sMsg)
+        End If
 
         sFieldDelimiter = String.Empty
 
@@ -822,26 +830,40 @@ Public Class clsFile2XL
                         New clsOcc(sQuotesSemiColonQuotesDelimiter, iNbOcc2, m_prm.bPreferMultipleDelimiter))
                 End If
             End If
-            If bDebugSort Then Debug.WriteLine("Result line n°" & iNumLine & " :")
+            If bDebugSort Then
+                Dim sMsg$ = "Result line n°" & iNumLine & " :"
+                Debug.WriteLine(sMsg)
+                sb.AppendLine(sMsg)
+            End If
             Dim iNumSep% = 0
             ' First sort by number of occurrences, then by occurrence length, so that "," can win against ,
             For Each occ In dic.Sort(sSorting)
-                If bDebugSort Then Debug.WriteLine(occ.s & "=" & occ.iNbOcc & " (" & occ.iOccLength & " car.)")
+                If bDebugSort Then
+                    Dim sMsg$ = occ.s & "=" & occ.iNbOcc & " (" & occ.iOccLength & " car.)"
+                    Debug.WriteLine(sMsg)
+                    sb.AppendLine(sMsg)
+                End If
                 If iNumSep = 0 AndAlso occ.iNbOcc > 0 Then dicStat(occ.s).iNbOcc += 1
                 iNumSep += 1
             Next
         Next
 
-        If bDebugSort Then
-            Debug.WriteLine("")
-            Debug.WriteLine("")
-            Debug.WriteLine("Results :")
+        If m_prm.bLogFile Then
+            Dim sMsg$ = "Probable delimiter detection results:"
+            If bDebugSort Then Debug.WriteLine("") : Debug.WriteLine("")
+            Debug.WriteLine(sMsg)
+            If bDebugSort Then sb.AppendLine() : sb.AppendLine()
+            sb.AppendLine(sMsg)
         End If
 
         Dim sProb$ = String.Empty
         Dim iNumSep2% = 0
         For Each occ In dicStat.Sort(sSorting)
-            If bDebugSort Then Debug.WriteLine(occ.s & "=" & occ.iNbOcc & " wins / " & m_lines.Count)
+            If m_prm.bLogFile Then
+                Dim sMsg$ = occ.s & "=" & occ.iNbOcc & " wins / " & m_lines.Count
+                Debug.WriteLine(sMsg)
+                sb.AppendLine(sMsg)
+            End If
             If iNumSep2 = 0 AndAlso occ.iNbOcc > 0 Then sProb = occ.s ' Keep the winner
             iNumSep2 += 1
         Next
@@ -850,7 +872,11 @@ Public Class clsFile2XL
             sFieldDelimiter = sProb
         Else
             If sProb = String.Empty Then
-                If bDebugSort Then Debug.WriteLine("No delimiter found")
+                If m_prm.bLogFile Then
+                    Dim sMsg$ = "No delimiter found"
+                    Debug.WriteLine(sMsg)
+                    sb.AppendLine(sMsg)
+                End If
                 If m_prm.bAlertForNoDelimiterFound Then
                     Dim sMsg$ = "No delimiter found !"
                     If Not String.IsNullOrEmpty(sDefaultDelimiter) Then
@@ -862,6 +888,8 @@ Public Class clsFile2XL
             End If
             sFieldDelimiter = sProb
         End If
+
+        If m_prm.bLogFile Then Me.m_sb.Append(sb)
 
     End Sub
 
@@ -950,7 +978,7 @@ Public Class clsFile2XL
         Next
 
         ' IsNumeric is slow in Debug mode for old version of Visual Studio (2013)
-        Dim sMsg$ = "Time for IsNumeric: " & rTime.ToString("0.000")
+        Dim sMsg$ = "Time (sec) for IsNumeric: " & rTime.ToString("0.000")
         If bDebugColType Then Debug.WriteLine(sMsg)
         m_sb.AppendLine(sMsg)
 

@@ -32,6 +32,7 @@
 ' File frmFile2XL.vb : Main form
 ' ------------------
 
+Imports System.Runtime.Hosting
 Imports System.Text ' for StringBuilder
 
 Public Class frmFile2XL
@@ -107,16 +108,17 @@ Public Class frmFile2XL
             Dim asArgs$() = asCmdLineArg(sArg0)
             If asArgs.Length > 0 Then
                 Dim sArgument$ = asArgs(0)
+                Dim sArgument2$ = ""
                 Dim bSingleDelimiter As Boolean = False
                 If asArgs.Length > 1 Then
-                    Dim sArg2$ = asArgs(1)
-                    If sArg2 = sSingleDelimiterArg Then bSingleDelimiter = True
+                    sArgument2 = asArgs(1)
+                    If sArgument2 = sSingleDelimiterArg Then bSingleDelimiter = True
                 End If
                 ShowButtons()
                 HideContextMenus()
                 Activation(bActivate:=False)
                 ShowMessage("Starting...")
-                If bStart(sArgument, bSingleDelimiter) Then
+                If bStart(sArgument, bSingleDelimiter, sArgument2) Then
                     Activation(bActivate:=True)
                     Quit()
                 Else
@@ -133,7 +135,7 @@ EndSub:
 
     End Sub
 
-    Private Function bStart(sPath$, bSingleDelimiter As Boolean) As Boolean
+    Private Function bStart(sPath$, bSingleDelimiter As Boolean, sArgument$) As Boolean
 
         If Not bFileExists(sPath, bPrompt:=True) Then Return False
 
@@ -161,8 +163,14 @@ EndSub:
             .bAutosizeColumns = My.Settings.AutosizeColumns,
             .iMinColumnWidth = My.Settings.MinColumnWidth,
             .iMaxColumnWidth = My.Settings.MaxColumnWidth,
-            .bRemoveNULL = My.Settings.RemoveNULL
+            .bRemoveNULL = My.Settings.RemoveNULL,
+            .bLogFile = My.Settings.LogFile
         }
+        'If prm.bLogFile Then
+        '    m_f2xl.m_sb.AppendLine("Arguments: " & Microsoft.VisualBasic.Interaction.Command)
+        '    m_f2xl.m_sb.AppendLine("Path: " & sPath)
+        '    If sArgument.Length > 0 Then m_f2xl.m_sb.AppendLine("Argument: " & sArgument)
+        'End If
 
         If Not prm.bUseXls AndAlso Not prm.bUseXlsx Then
             If bDebug Then Stop
