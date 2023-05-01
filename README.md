@@ -80,9 +80,9 @@ There is no user interface to configure settings, simply edit the config. file i
 
 ## Version 1.07 - 01/05/2023
 - Log probable delimiter detection results in the log file ;
-- Option detectEncodingFromByteOrderMarks used in StreamReader ;
+- Option detectEncodingFromByteOrderMarks used in StreamReader (don't try to detect the encoding on your own, instead use the standard .net option for this complex task) ;
 - Test text-encoding-detect from https://github.com/AutoItConsulting/text-encoding-detect ;
-- Indent code for Visual Studio 2020 ;
+- Indent code for Visual Studio 2022 ;
 - .Net45 -> .Net472.
 
 ## Version 1.06 - 22/10/2021
