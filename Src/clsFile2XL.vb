@@ -91,7 +91,7 @@ Public Class clsFile2XL
     Private Class clsField
 
         ' sField and iNumField are used only in debug mode
-        <CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")>
+        '<CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")>
         Public sField$, iNumField%
         Public sType$, iNbOcc%
         Public bCanEndWithMinus As Boolean = False ' Numeric followed by -
@@ -108,7 +108,7 @@ Public Class clsFile2XL
         Public iNbOcc%, iOccLength%
 
         ' This field is used in sorting using a string, e.g.: "iWeight DESC, iNbOcc DESC, iOccLength DESC"
-        <CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")>
+        '<CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")>
         Public iWeight%
 
         Public Sub New(s0$, iNbOcc0%, bPreferMultipleDelimiter As Boolean)
