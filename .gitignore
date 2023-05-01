@@ -59,3 +59,5 @@ Tmp/
 /File2XL.log
 /Bak
 *.bat
+/File2XL.vbproj.html
+*.ini
