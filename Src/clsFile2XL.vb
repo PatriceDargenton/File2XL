@@ -345,7 +345,7 @@ Public Class clsFile2XL
                     If m_prm.bAutosizeColumns Then
 
                         If iNumField0 Mod iDisplayRate = 0 OrElse iNumField0 = iNbFields0 Then
-                            m_delegMsg.ShowMsg("Text sheet : Autosizing column n°" & iNumField0 & "...")
+                            m_delegMsg.ShowMsg("Text sheet : Autosizing column n°" & iNumField0 & "/" & iNbFields0 & "...")
                             If m_delegMsg.m_bCancel Then m_delegMsg.m_bCancel = False : Exit For
                         End If
 
