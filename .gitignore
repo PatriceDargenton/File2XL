@@ -57,3 +57,5 @@ Tmp/
 /NPOI.OpenXml4Net.dll
 /NPOI.OpenXmlFormats.dll
 /File2XL.log
+/Bak
+*.bat
