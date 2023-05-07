@@ -49,11 +49,18 @@ Temporary Items
 /bin
 /obj
 /Tmp
-.vs/
+/.vs
 /Bak
 /packages
 
-*.suo
 *.bat
 *.ini
 *.html
+*.pdb
+
+/File2XL.xml
+/File2XL.log
+
+/packages
+
+*.suo
