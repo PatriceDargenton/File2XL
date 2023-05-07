@@ -4,7 +4,7 @@
 ' Documentation : File2XL.html
 ' http://patrice.dargenton.free.fr/CodesSources/File2XL.html
 ' http://patrice.dargenton.free.fr/CodesSources/File2XL.vbproj.html
-' Version 1.07 - 22/04/2023
+' Version 1.07 - 01/05/2023
 ' By Patrice Dargenton : mailto:patrice.dargenton@free.fr
 ' http://patrice.dargenton.free.fr/index.html
 ' http://patrice.dargenton.free.fr/CodesSources/index.html
