@@ -45,20 +45,15 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
-obj/
+
+/bin
+/obj
+/Tmp
 .vs/
-*.suo
-/File2XL.exe
-*.pdb
-/File2XL.xml
-Tmp/
-/File2XL.exe
-/ICSharpCode.SharpZipLib.dll
-/NPOI.OpenXml4Net.dll
-/NPOI.OpenXmlFormats.dll
-/File2XL.log
 /Bak
+/packages
+
+*.suo
 *.bat
-/File2XL.vbproj.html
 *.ini
 *.html

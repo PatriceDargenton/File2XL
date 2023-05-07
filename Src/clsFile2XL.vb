@@ -10,7 +10,6 @@ Imports NPOI.SS.Util ' For CellRangeAddress
 Imports NPOI.SS.UserModel ' For FillPattern
 Imports NPOI.HSSF.Util ' For HSSFColor
 Imports System.Runtime.CompilerServices ' For MethodImpl(MethodImplOptions.AggressiveInlining)
-Imports System.Drawing.Imaging
 
 Public Class clsPrm
 
@@ -275,7 +274,6 @@ Public Class clsFile2XL
                     ' (_FilterDatabase: The name must not be identical to a predefined name)
                     'm_wb.Names.Item("_FilterDatabase").Delete()
                     'm_wb.RemoveName("_FilterDatabase")
-                    ' ToDo : check if a new version of NPOI is available (retry NuGet package ?)
                     m_wb.Write(fs)
                 End If
             End Using
@@ -331,7 +329,8 @@ Public Class clsFile2XL
         Dim rTime# = 0
         Dim iMinColumnWidth% = m_prm.iMinColumnWidth
         Dim iMaxColumnWidth% = m_prm.iMaxColumnWidth
-        Const iDisplayRate = 10
+        Dim iDisplayRate = 10
+        If bDebug Then iDisplayRate = 1
         Dim iNumField0% = 0
         Dim iNbFields0% = row0.Cells.Count
         For Each field In m_lstFields
