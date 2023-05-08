@@ -105,4 +105,4 @@ There is no user interface to configure settings, simply edit the config. file i
   NPOI: a .NET library that can read/write Office formats without Microsoft Office installed. No COM+, no interop.  
   Only one add (2.2.1.1): GetColumnWidth: iNumRow++; if (iNumRow > iNbRowMax) break;  
   const int iNbRowMax = 100;  
-  in order to perform a fast column autosize based on only the top 100 lines (suggestion have been submitted and approved by NPOI team, and it's being tested).
+  in order to perform a fast column autosize based on only the top 100 lines (suggestion have been submitted and approved by NPOI team, and it's being tested, see [NuGet branch](https://github.com/PatriceDargenton/File2XL/tree/NuGet)).
