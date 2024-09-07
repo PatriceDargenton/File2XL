@@ -90,7 +90,6 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GlobalSuppressions.vb" />
     <Compile Include="Src\modFile2XLUtil.vb" />
     <Compile Include="Src\Util\clsShowMsg.vb" />
     <Compile Include="Src\Util\clsSortDic.vb" />
