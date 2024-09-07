@@ -1,14 +1,6 @@
 ﻿
 ' File2XL : Open a csv file into MS-Excel with pre-formatted cells
 ' ----------------------------------------------------------------
-' Documentation : File2XL.html
-' http://patrice.dargenton.free.fr/CodesSources/File2XL.html
-' http://patrice.dargenton.free.fr/CodesSources/File2XL.vbproj.html
-' Version 1.07 - 01/05/2023
-' By Patrice Dargenton : mailto:patrice.dargenton@free.fr
-' http://patrice.dargenton.free.fr/index.html
-' http://patrice.dargenton.free.fr/CodesSources/index.html
-' ----------------------------------------------------------------
 
 ' Naming convention :
 ' -----------------
