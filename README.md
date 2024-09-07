@@ -16,13 +16,6 @@ Excel Text Import Wizard, Csv2Excel, Csv to Excel, Txt2Excel, Txt to Excel, Text
     - [Settings](#settings)
 - [Projects](#projects)
 - [Versions](#versions)
-    - [Version 1.07 - 01/05/2023](#version-107---01052023)
-    - [Version 1.06 - 22/10/2021](#version-106---22102021)
-    - [Version 1.05 - 25/01/2019](#version-105---25012019)
-    - [Version 1.04 - 05/01/2018](#version-104---05012018)
-    - [Version 1.03 - 20/05/2017](#version-103---20052017)
-    - [Version 1.02 - 08/05/2017](#version-102---08052017)
-    - [Version 1.01 - 25/06/2016: First version](#version-101---25062016--first-version)
 - [Links](#links)
 
 <!-- /TOC -->
@@ -70,34 +63,7 @@ There is no user interface to configure settings, simply edit the config. file i
 
 # Versions
 
-## Version 1.07 - 01/05/2023
-- Log probable delimiter detection results in the log file;
-- Option detectEncodingFromByteOrderMarks used in StreamReader (don't try to detect the encoding on your own, instead use the standard .net option for this complex task);
-- Test text-encoding-detect from https://github.com/AutoItConsulting/text-encoding-detect;
-- Indent code for Visual Studio 2022;
-- .Net45 -> .Net472.
-
-## Version 1.06 - 22/10/2021
-- Detecting UTF8 Encoding: one case added.
-
-## Version 1.05 - 25/01/2019
-- Detecting UTF8 Encoding: one case added.
-
-## Version 1.04 - 05/01/2018
-- Encoding reading: no need to read with write access right, just read access.
-
-## Version 1.03 - 20/05/2017
-- LogFile setting added: to log conversion time of each file;
-- Visual Studio 2017 code analysis: almost all rules are respected;
-- UTF8 encoding added in encoding detection;
-- MinColumnWidth and MaxColumnWidth settings added;
-- Bug fixed (from 1.02 version): object variable not set: fs.position while fs is null.
-
-## Version 1.02 - 08/05/2017
-- RemoveNULL setting: remove NULL in field value in standard sheet, for example PhpMyAdmin NULL value in csv export;
-- SingleDelimiter: disable multiple delimiter (not simply prefer single one).
-
-## Version 1.01 - 25/06/2016: First version
+See [Changelog.md](Changelog.md)
 
 
 # Links
