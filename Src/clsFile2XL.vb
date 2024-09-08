@@ -326,7 +326,14 @@ Public Class clsFile2XL
         If bDebug Then Debug.WriteLine(sMsg)
         m_sb.AppendLine(sMsg)
 
-        Dim rTime# = 0
+        Dim rTimeAutoSizeColumn# = 0
+        Dim rTimeGetColumnWidth# = 0
+        Dim rTimeSetColumnWidth# = 0
+        Dim rTimeAutoSizeColumnStdrSht# = 0
+        Dim rTimeGetColumnWidthStdrSht# = 0
+        Dim rTimeSetColumnWidthStdrSht# = 0
+        'Dim rTimeStandardSheet# = 0
+        Dim lstColSize As New List(Of Double) ' 07/09/2024
         Dim iMinColumnWidth% = m_prm.iMinColumnWidth
         Dim iMaxColumnWidth% = m_prm.iMaxColumnWidth
         Dim iDisplayRate = 10
@@ -335,6 +342,7 @@ Public Class clsFile2XL
         Dim iNbFields0% = row0.Cells.Count
         For Each field In m_lstFields
             iNumField0 += 1
+            lstColSize.Add(0)
             If field.sType.StartsWith(clsFieldType.sNumeric, StringComparison.Ordinal) Then
                 ' Color header
                 If iNumField0 <= iNbFields0 Then
@@ -355,40 +363,62 @@ Public Class clsFile2XL
                             m_shXlsx.AutoSizeColumn(iNumField0 - 1) ' AutoFit
 
                             ' 20/05/2017
-                            Dim iColWTxt% = m_shXlsx.GetColumnWidth(iNumField0 - 1)
+                            Dim rColWTxt# = m_shXlsx.GetColumnWidth(iNumField0 - 1)
+                            Dim iColWTxt% = CInt(rColWTxt)
                             If iColWTxt < iMinColumnWidth Then
                                 iColWTxt = iMinColumnWidth
-                                m_shXlsx.SetColumnWidth(iNumField0 - 1, iColWTxt)
+                                m_shXlsx.SetColumnWidth(iNumField0 - 1, rColWTxt)
                             End If
                             If iColWTxt > iMaxColumnWidth Then
                                 iColWTxt = iMaxColumnWidth
-                                m_shXlsx.SetColumnWidth(iNumField0 - 1, iColWTxt)
+                                m_shXlsx.SetColumnWidth(iNumField0 - 1, rColWTxt)
                             End If
 
                             If m_prm.bCreateStandardSheet Then _
-                                m_shStdrXlsx.SetColumnWidth(iNumField0 - 1, iColWTxt)
+                                m_shStdrXlsx.SetColumnWidth(iNumField0 - 1, rColWTxt)
                         Else
 
                             dTimeStart = Now()
                             m_sh.AutoSizeColumn(iNumField0 - 1) ' AutoFit
+                            'm_sh.AutoSizeColumn(iNumField0 - 1, maxRows:100) ' maxRows: coming soon...
                             dTimeEnd = Now()
                             ts = dTimeEnd - dTimeStart
-                            rTime += ts.TotalSeconds
+                            rTimeAutoSizeColumn += ts.TotalSeconds
 
                             ' 20/05/2017
-                            Dim iColWTxt% = m_sh.GetColumnWidth(iNumField0 - 1)
+                            dTimeStart = Now()
+                            Dim rColWTxt# = m_sh.GetColumnWidth(iNumField0 - 1)
+                            dTimeEnd = Now()
+                            ts = dTimeEnd - dTimeStart
+                            rTimeGetColumnWidth += ts.TotalSeconds
+
+                            Dim iColWTxt% = CInt(rColWTxt)
                             'Debug.WriteLine("iColWTxt(" & iNumField0 & ")=" & iColWTxt)
+                            dTimeStart = Now()
+
                             If iColWTxt < iMinColumnWidth Then
                                 iColWTxt = iMinColumnWidth
-                                m_sh.SetColumnWidth(iNumField0 - 1, iColWTxt)
+                                m_sh.SetColumnWidth(iNumField0 - 1, rColWTxt)
                             End If
                             If iColWTxt > iMaxColumnWidth Then
                                 iColWTxt = iMaxColumnWidth
-                                m_sh.SetColumnWidth(iNumField0 - 1, iColWTxt)
+                                m_sh.SetColumnWidth(iNumField0 - 1, rColWTxt)
                             End If
 
+                            dTimeEnd = Now()
+                            ts = dTimeEnd - dTimeStart
+                            rTimeSetColumnWidth += ts.TotalSeconds
+
+                            dTimeStart = Now()
                             If m_prm.bCreateStandardSheet Then _
-                            m_shStdr.SetColumnWidth(iNumField0 - 1, iColWTxt)
+                                m_shStdr.SetColumnWidth(iNumField0 - 1, rColWTxt)
+                            dTimeEnd = Now()
+                            ts = dTimeEnd - dTimeStart
+                            rTimeSetColumnWidthStdrSht += ts.TotalSeconds
+
+                            lstColSize(iNumField0 - 1) = rColWTxt
+                            'If bDebug Then Debug.WriteLine("Col. n°" & iNumField0 & " : " & rColWTxt.ToString("0.00"))
+
                         End If
 
                     End If
@@ -397,24 +427,9 @@ Public Class clsFile2XL
             End If
         Next
 
-        ' Time (sec) for AutoSizeColumn:
-        ' --     for NPOI 1.2.5   Nuget     29/07/2012 (no Excel 2007 support)
-        ' 39.174 for NPOI 2.0.6   Nuget     12/04/2014
-        ' 42.800 for NPOI 2.1.3   Nuget     31/12/2014
-        ' 45.601 for NPOI 2.1.3.1 Dll net40 23/02/2015 https://www.nuget.org/packages/NPOI/2.1.3.1
-        ' 38.790 for NPOI 2.1.3.1 Nuget     23/02/2015 https://www.nuget.org/packages/NPOI/2.1.3.1
-        '  3.934 for NPOI 2.2.1   Nuget     31/05/2016
-        '  5.121 for NPOI 2.2.1.0 Dll net20 01/06/2016 https://www.nuget.org/packages/NPOI/2.2.1
-        '  4.888 for NPOI 2.2.1.0 Dll net40 01/06/2016 https://www.nuget.org/packages/NPOI/2.2.1
-        '  0.034 for NPOI 2.2.1.1 Dll act   05/06/2016 Optimized version: maxRows for GetColumnWidth
-        '  3.760 for NPOI 2.5.5   Nuget     24/10/2021 https://www.nuget.org/packages/NPOI/2.5.5
-        ' 39.977 for NPOI 2.6.0   Nuget     17/11/2022 https://www.nuget.org/packages/NPOI/2.6.0 (very slow and AutoSizeColumn does not work)
-        '  3.517 for NPOI 1.2.3   Nuget     24/11/2020 https://www.nuget.org/packages/DotNetCore.NPOI/1.2.3
-        sMsg = "Time (sec) for AutoSizeColumn: " & rTime.ToString("0.000")
-        If bDebug Then Debug.WriteLine(sMsg)
-        m_sb.AppendLine(sMsg)
-
         If m_prm.bCreateStandardSheet Then
+
+            'dTimeStart = Now()
 
             If bExcel2007 Then
                 m_shStdrXlsx.SetAutoFilter(range)
@@ -449,8 +464,10 @@ Public Class clsFile2XL
                             ' Set same column width on text sheet
                             If bExcel2007 Then
                                 m_shStdrXlsx.AutoSizeColumn(iMemNumField) ' AutoFit
-                                Dim iColWStdr% = m_shStdrXlsx.GetColumnWidth(iMemNumField)
-                                Dim iColWTxt% = m_shXlsx.GetColumnWidth(iMemNumField)
+                                Dim rColWStdr# = m_shStdrXlsx.GetColumnWidth(iMemNumField)
+                                Dim iColWStdr% = CInt(rColWStdr)
+                                Dim rColWTxt# = m_shXlsx.GetColumnWidth(iMemNumField)
+                                Dim iColWTxt% = CInt(rColWTxt)
                                 Dim bResizeStdr As Boolean = False
                                 Dim bResizeTxt As Boolean = False
                                 If iColWStdr > iMaxColumnWidth Then iColWStdr = iMaxColumnWidth : bResizeStdr = True
@@ -469,28 +486,58 @@ Public Class clsFile2XL
                                 If bResizeTxt Then m_shXlsx.SetColumnWidth(iMemNumField, iColWTxt)
                                 If bResizeStdr Then m_shStdrXlsx.SetColumnWidth(iMemNumField, iColWStdr)
                             Else
-                                m_shStdr.AutoSizeColumn(iMemNumField) ' AutoFit
-                                Dim iColWStdr% = m_shStdr.GetColumnWidth(iMemNumField)
-                                Dim iColWTxt% = m_sh.GetColumnWidth(iMemNumField)
-                                'Debug.WriteLine("iColWStdr(" & iNumField0 & ")=" & iColWStdr)
-                                'Debug.WriteLine("iColWTxt(" & iNumField0 & ")=" & iColWTxt)
-                                Dim bResizeStdr As Boolean = False
-                                Dim bResizeTxt As Boolean = False
-                                If iColWStdr > iMaxColumnWidth Then iColWStdr = iMaxColumnWidth : bResizeStdr = True
-                                If iColWTxt > iMaxColumnWidth Then iColWTxt = iMaxColumnWidth : bResizeTxt = True
-                                If iColWStdr < iMinColumnWidth Then iColWStdr = iMinColumnWidth : bResizeStdr = True
-                                If iColWTxt < iMinColumnWidth Then iColWTxt = iMinColumnWidth : bResizeTxt = True
-                                If iColWTxt < iColWStdr Then
-                                    'm_sh.SetColumnWidth(iMemNumField, iColWStdr)
-                                    iColWTxt = iColWStdr
-                                    bResizeTxt = True
-                                ElseIf iColWTxt > iColWStdr Then
-                                    'm_shStdr.SetColumnWidth(iMemNumField, iColWTxt)
-                                    iColWStdr = iColWTxt
-                                    bResizeStdr = True
-                                End If
-                                If bResizeTxt Then m_sh.SetColumnWidth(iMemNumField, iColWTxt)
-                                If bResizeStdr Then m_shStdr.SetColumnWidth(iMemNumField, iColWStdr)
+
+                                Dim rColWTxtDest = lstColSize(iMemNumField)
+                                If bDebug Then Debug.WriteLine("Col. n°" & iNumField & " : " & rColWTxtDest.ToString("0.00"))
+                                m_shStdr.SetColumnWidth(iMemNumField, rColWTxtDest)
+
+                                'If False Then
+                                '    dTimeStart = Now()
+                                '    m_shStdr.AutoSizeColumn(iMemNumField) ' AutoFit
+                                '    dTimeEnd = Now()
+                                '    ts = dTimeEnd - dTimeStart
+                                '    rTimeAutoSizeColumnStdrSht += ts.TotalSeconds
+
+                                '    dTimeStart = Now()
+                                '    Dim rColWStdr# = m_shStdr.GetColumnWidth(iMemNumField)
+                                '    dTimeEnd = Now()
+                                '    ts = dTimeEnd - dTimeStart
+                                '    rTimeGetColumnWidthStdrSht += ts.TotalSeconds
+
+                                '    Dim iColWStdr% = CInt(rColWStdr)
+                                '    Dim rColWTxt# = m_sh.GetColumnWidth(iMemNumField)
+                                '    Dim iColWTxt% = CInt(rColWTxt)
+                                '    'Debug.WriteLine("iColWStdr(" & iNumField0 & ")=" & iColWStdr)
+                                '    'Debug.WriteLine("iColWTxt(" & iNumField0 & ")=" & iColWTxt)
+                                '    Dim bResizeStdr As Boolean = False
+                                '    Dim bResizeTxt As Boolean = False
+                                '    If iColWStdr > iMaxColumnWidth Then iColWStdr = iMaxColumnWidth : bResizeStdr = True
+                                '    If iColWTxt > iMaxColumnWidth Then iColWTxt = iMaxColumnWidth : bResizeTxt = True
+                                '    If iColWStdr < iMinColumnWidth Then iColWStdr = iMinColumnWidth : bResizeStdr = True
+                                '    If iColWTxt < iMinColumnWidth Then iColWTxt = iMinColumnWidth : bResizeTxt = True
+                                '    If iColWTxt < iColWStdr Then
+                                '        'm_sh.SetColumnWidth(iMemNumField, iColWStdr)
+                                '        iColWTxt = iColWStdr
+                                '        bResizeTxt = True
+                                '    ElseIf iColWTxt > iColWStdr Then
+                                '        'm_shStdr.SetColumnWidth(iMemNumField, iColWTxt)
+                                '        iColWStdr = iColWTxt
+                                '        bResizeStdr = True
+                                '    End If
+
+                                '    dTimeStart = Now()
+                                '    If bResizeTxt Then m_sh.SetColumnWidth(iMemNumField, rColWTxt)
+                                '    dTimeEnd = Now()
+                                '    ts = dTimeEnd - dTimeStart
+                                '    rTimeSetColumnWidth += ts.TotalSeconds
+
+                                '    dTimeStart = Now()
+                                '    If bResizeStdr Then m_shStdr.SetColumnWidth(iMemNumField, rColWStdr)
+                                '    dTimeEnd = Now()
+                                '    ts = dTimeEnd - dTimeStart
+                                '    rTimeSetColumnWidthStdrSht += ts.TotalSeconds
+                                'End If
+
                             End If
 
                         End If
@@ -507,6 +554,34 @@ Public Class clsFile2XL
             End If
 
         End If
+
+        'dTimeEnd = Now()
+        'ts = dTimeEnd - dTimeStart
+        'rTimeStandardSheet += ts.TotalSeconds
+
+        ' Time (sec) for AutoSizeColumn:
+        ' --     for NPOI 1.2.5   Nuget     29/07/2012 (no Excel 2007 support)
+        ' 39.174 for NPOI 2.0.6   Nuget     12/04/2014
+        ' 42.800 for NPOI 2.1.3   Nuget     31/12/2014
+        ' 45.601 for NPOI 2.1.3.1 Dll net40 23/02/2015 https://www.nuget.org/packages/NPOI/2.1.3.1
+        ' 38.790 for NPOI 2.1.3.1 Nuget     23/02/2015 https://www.nuget.org/packages/NPOI/2.1.3.1
+        '  3.934 for NPOI 2.2.1   Nuget     31/05/2016
+        '  5.121 for NPOI 2.2.1.0 Dll net20 01/06/2016 https://www.nuget.org/packages/NPOI/2.2.1
+        '  4.888 for NPOI 2.2.1.0 Dll net40 01/06/2016 https://www.nuget.org/packages/NPOI/2.2.1
+        '  0.034 for NPOI 2.2.1.1 Dll act   05/06/2016 Optimized version: maxRows for GetColumnWidth
+        '  3.760 for NPOI 2.5.5   Nuget     24/10/2021 https://www.nuget.org/packages/NPOI/2.5.5
+        ' 39.977 for NPOI 2.6.0   Nuget     17/11/2022 https://www.nuget.org/packages/NPOI/2.6.0 (very slow and AutoSizeColumn does not work)
+        '  3.517 for NPOI 1.2.3   Nuget     24/11/2020 https://www.nuget.org/packages/DotNetCore.NPOI/1.2.3
+        '  0.588 for NPOI 2.7.1   Nuget     08/09/2024 https://www.nuget.org/packages/DotNetCore.NPOI/2.7.1 maxRows: coming soon...
+        sMsg = "Text sheet: Time (sec) for AutoSizeColumn: " & rTimeAutoSizeColumn.ToString("0.000")
+        sMsg &= vbLf & "Text sheet: Time (sec) for GetColumnWidth: " & rTimeGetColumnWidth.ToString("0.000")
+        sMsg &= vbLf & "Text sheet: Time (sec) for SetColumnWidth: " & rTimeSetColumnWidth.ToString("0.000")
+        'sMsg &= vbLf & "Stdr sheet: Time (sec) : " & rTimeStandardSheet.ToString("0.000")
+        sMsg &= vbLf & "Stdr sheet: Time (sec) for AutoSizeColumn: " & rTimeAutoSizeColumnStdrSht.ToString("0.000")
+        sMsg &= vbLf & "Stdr sheet: Time (sec) for GetColumnWidth: " & rTimeGetColumnWidthStdrSht.ToString("0.000")
+        sMsg &= vbLf & "Stdr sheet: Time (sec) for SetColumnWidth: " & rTimeSetColumnWidthStdrSht.ToString("0.000")
+        If bDebug Then Debug.WriteLine(sMsg)
+        m_sb.AppendLine(sMsg)
 
     End Sub
 

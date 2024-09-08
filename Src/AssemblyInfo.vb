@@ -10,7 +10,7 @@ Imports System.Reflection
 <Assembly: AssemblyProduct("File2XL")>
 <Assembly: AssemblyCopyright("Copyright © ORS Production 2023")>
 
-<Assembly: AssemblyVersion("1.0.7.*")> 
+<Assembly: AssemblyVersion("1.0.8.*")>
 
 <Assembly: Runtime.InteropServices.ComVisible(False)>  ' CA1017 
 <Assembly: CLSCompliant(True)>  ' CA1014

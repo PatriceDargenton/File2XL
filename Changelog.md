@@ -3,6 +3,10 @@
 All notable changes to the File2XL project will be documented in this file.
 
 ## [Unreleased]
+### Fixed
+- AutoSizeColumn: very slow for standard sheet, but not for text sheet: so use text sheet sizes for both;
+- maxRows option for AutoSizeColumn: coming soon...
+- packages update.
 
 ## [1.07] - 01/05/2023
 ### Added
