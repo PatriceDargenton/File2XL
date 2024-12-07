@@ -361,6 +361,7 @@ Public Class clsFile2XL
                         ' Set same column width on text sheet
                         If bExcel2007 Then
                             m_shXlsx.AutoSizeColumn(iNumField0 - 1) ' AutoFit
+                            'm_shXlsx.AutoSizeColumn(iNumField0 - 1, useMergedCells:=False, maxRows:=100)
 
                             ' 20/05/2017
                             Dim rColWTxt# = m_shXlsx.GetColumnWidth(iNumField0 - 1)
@@ -379,8 +380,8 @@ Public Class clsFile2XL
                         Else
 
                             dTimeStart = Now()
-                            m_sh.AutoSizeColumn(iNumField0 - 1) ' AutoFit
-                            'm_sh.AutoSizeColumn(iNumField0 - 1, maxRows:100) ' maxRows: coming soon...
+                            'm_sh.AutoSizeColumn(iNumField0 - 1) ' AutoFit
+                            m_sh.AutoSizeColumn(iNumField0 - 1, useMergedCells:=False, maxRows:=100) ' 07/12/2024
                             dTimeEnd = Now()
                             ts = dTimeEnd - dTimeStart
                             rTimeAutoSizeColumn += ts.TotalSeconds
@@ -464,6 +465,7 @@ Public Class clsFile2XL
                             ' Set same column width on text sheet
                             If bExcel2007 Then
                                 m_shStdrXlsx.AutoSizeColumn(iMemNumField) ' AutoFit
+                                'm_shStdrXlsx.AutoSizeColumn(iNumField0 - 1, useMergedCells:=False, maxRows:=100)
                                 Dim rColWStdr# = m_shStdrXlsx.GetColumnWidth(iMemNumField)
                                 Dim iColWStdr% = CInt(rColWStdr)
                                 Dim rColWTxt# = m_shXlsx.GetColumnWidth(iMemNumField)
@@ -488,7 +490,7 @@ Public Class clsFile2XL
                             Else
 
                                 Dim rColWTxtDest = lstColSize(iMemNumField)
-                                If bDebug Then Debug.WriteLine("Col. n°" & iNumField & " : " & rColWTxtDest.ToString("0.00"))
+                                If bDebug Then Debug.WriteLine("Col. n°" & iNumField & " : size = " & rColWTxtDest.ToString("0.00"))
                                 m_shStdr.SetColumnWidth(iMemNumField, rColWTxtDest)
 
                                 'If False Then
@@ -573,6 +575,7 @@ Public Class clsFile2XL
         ' 39.977 for NPOI 2.6.0   Nuget     17/11/2022 https://www.nuget.org/packages/NPOI/2.6.0 (very slow and AutoSizeColumn does not work)
         '  3.517 for NPOI 1.2.3   Nuget     24/11/2020 https://www.nuget.org/packages/DotNetCore.NPOI/1.2.3
         '  0.588 for NPOI 2.7.1   Nuget     08/09/2024 https://www.nuget.org/packages/DotNetCore.NPOI/2.7.1 maxRows: coming soon...
+        '  0.693 for NPOI 2.7.2   Nuget     07/12/2024 https://www.nuget.org/packages/DotNetCore.NPOI/2.7.2 maxRows: available, but only for xls, not for xlsx
         sMsg = "Text sheet: Time (sec) for AutoSizeColumn: " & rTimeAutoSizeColumn.ToString("0.000")
         sMsg &= vbLf & "Text sheet: Time (sec) for GetColumnWidth: " & rTimeGetColumnWidth.ToString("0.000")
         sMsg &= vbLf & "Text sheet: Time (sec) for SetColumnWidth: " & rTimeSetColumnWidth.ToString("0.000")
