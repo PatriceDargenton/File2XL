@@ -360,12 +360,22 @@ Public Class clsFile2XL
 
                         ' Set same column width on text sheet
                         If bExcel2007 Then
+
+                            dTimeStart = Now()
                             m_shXlsx.AutoSizeColumn(iNumField0 - 1) ' AutoFit
                             'm_shXlsx.AutoSizeColumn(iNumField0 - 1, useMergedCells:=False, maxRows:=100)
+                            dTimeEnd = Now()
+                            ts = dTimeEnd - dTimeStart
+                            rTimeAutoSizeColumn += ts.TotalSeconds
 
                             ' 20/05/2017
+                            dTimeStart = Now()
                             Dim rColWTxt# = m_shXlsx.GetColumnWidth(iNumField0 - 1)
+                            dTimeEnd = Now()
+                            ts = dTimeEnd - dTimeStart
+                            rTimeGetColumnWidth += ts.TotalSeconds
                             Dim iColWTxt% = CInt(rColWTxt)
+                            dTimeStart = Now()
                             If iColWTxt < iMinColumnWidth Then
                                 iColWTxt = iMinColumnWidth
                                 m_shXlsx.SetColumnWidth(iNumField0 - 1, rColWTxt)
@@ -374,9 +384,20 @@ Public Class clsFile2XL
                                 iColWTxt = iMaxColumnWidth
                                 m_shXlsx.SetColumnWidth(iNumField0 - 1, rColWTxt)
                             End If
+                            dTimeEnd = Now()
+                            ts = dTimeEnd - dTimeStart
+                            rTimeSetColumnWidth += ts.TotalSeconds
 
-                            If m_prm.bCreateStandardSheet Then _
+                            If m_prm.bCreateStandardSheet Then
+                                dTimeStart = Now()
                                 m_shStdrXlsx.SetColumnWidth(iNumField0 - 1, rColWTxt)
+                                dTimeEnd = Now()
+                                ts = dTimeEnd - dTimeStart
+                                rTimeSetColumnWidthStdrSht += ts.TotalSeconds
+                            End If
+
+                            lstColSize(iNumField0 - 1) = rColWTxt
+
                         Else
 
                             dTimeStart = Now()
@@ -410,12 +431,13 @@ Public Class clsFile2XL
                             ts = dTimeEnd - dTimeStart
                             rTimeSetColumnWidth += ts.TotalSeconds
 
-                            dTimeStart = Now()
-                            If m_prm.bCreateStandardSheet Then _
+                            If m_prm.bCreateStandardSheet Then
+                                dTimeStart = Now()
                                 m_shStdr.SetColumnWidth(iNumField0 - 1, rColWTxt)
-                            dTimeEnd = Now()
-                            ts = dTimeEnd - dTimeStart
-                            rTimeSetColumnWidthStdrSht += ts.TotalSeconds
+                                dTimeEnd = Now()
+                                ts = dTimeEnd - dTimeStart
+                                rTimeSetColumnWidthStdrSht += ts.TotalSeconds
+                            End If
 
                             lstColSize(iNumField0 - 1) = rColWTxt
                             'If bDebug Then Debug.WriteLine("Col. n°" & iNumField0 & " : " & rColWTxt.ToString("0.00"))
@@ -464,29 +486,37 @@ Public Class clsFile2XL
 
                             ' Set same column width on text sheet
                             If bExcel2007 Then
-                                m_shStdrXlsx.AutoSizeColumn(iMemNumField) ' AutoFit
-                                'm_shStdrXlsx.AutoSizeColumn(iNumField0 - 1, useMergedCells:=False, maxRows:=100)
-                                Dim rColWStdr# = m_shStdrXlsx.GetColumnWidth(iMemNumField)
-                                Dim iColWStdr% = CInt(rColWStdr)
-                                Dim rColWTxt# = m_shXlsx.GetColumnWidth(iMemNumField)
-                                Dim iColWTxt% = CInt(rColWTxt)
-                                Dim bResizeStdr As Boolean = False
-                                Dim bResizeTxt As Boolean = False
-                                If iColWStdr > iMaxColumnWidth Then iColWStdr = iMaxColumnWidth : bResizeStdr = True
-                                If iColWTxt > iMaxColumnWidth Then iColWTxt = iMaxColumnWidth : bResizeTxt = True
-                                If iColWStdr < iMinColumnWidth Then iColWStdr = iMinColumnWidth : bResizeStdr = True
-                                If iColWTxt < iMinColumnWidth Then iColWTxt = iMinColumnWidth : bResizeTxt = True
-                                If iColWTxt < iColWStdr Then
-                                    'm_shXlsx.SetColumnWidth(iMemNumField, iColWStdr)
-                                    iColWTxt = iColWStdr
-                                    bResizeTxt = True
-                                ElseIf iColWTxt > iColWStdr Then
-                                    'm_shStdrXlsx.SetColumnWidth(iMemNumField, iColWTxt)
-                                    iColWStdr = iColWTxt
-                                    bResizeStdr = True
-                                End If
-                                If bResizeTxt Then m_shXlsx.SetColumnWidth(iMemNumField, iColWTxt)
-                                If bResizeStdr Then m_shStdrXlsx.SetColumnWidth(iMemNumField, iColWStdr)
+
+                                Dim rColWTxtDest = lstColSize(iMemNumField)
+                                If bDebug Then Debug.WriteLine("Col. n°" & iNumField & " : size = " & rColWTxtDest.ToString("0.00"))
+                                m_shStdrXlsx.SetColumnWidth(iMemNumField, rColWTxtDest)
+
+                                'If False Then ' 08/12/2024
+                                '    m_shStdrXlsx.AutoSizeColumn(iMemNumField) ' AutoFit
+                                '    'm_shStdrXlsx.AutoSizeColumn(iNumField0 - 1, useMergedCells:=False, maxRows:=100)
+                                '    Dim rColWStdr# = m_shStdrXlsx.GetColumnWidth(iMemNumField)
+                                '    Dim iColWStdr% = CInt(rColWStdr)
+                                '    Dim rColWTxt# = m_shXlsx.GetColumnWidth(iMemNumField)
+                                '    Dim iColWTxt% = CInt(rColWTxt)
+                                '    Dim bResizeStdr As Boolean = False
+                                '    Dim bResizeTxt As Boolean = False
+                                '    If iColWStdr > iMaxColumnWidth Then iColWStdr = iMaxColumnWidth : bResizeStdr = True
+                                '    If iColWTxt > iMaxColumnWidth Then iColWTxt = iMaxColumnWidth : bResizeTxt = True
+                                '    If iColWStdr < iMinColumnWidth Then iColWStdr = iMinColumnWidth : bResizeStdr = True
+                                '    If iColWTxt < iMinColumnWidth Then iColWTxt = iMinColumnWidth : bResizeTxt = True
+                                '    If iColWTxt < iColWStdr Then
+                                '        'm_shXlsx.SetColumnWidth(iMemNumField, iColWStdr)
+                                '        iColWTxt = iColWStdr
+                                '        bResizeTxt = True
+                                '    ElseIf iColWTxt > iColWStdr Then
+                                '        'm_shStdrXlsx.SetColumnWidth(iMemNumField, iColWTxt)
+                                '        iColWStdr = iColWTxt
+                                '        bResizeStdr = True
+                                '    End If
+                                '    If bResizeTxt Then m_shXlsx.SetColumnWidth(iMemNumField, iColWTxt)
+                                '    If bResizeStdr Then m_shStdrXlsx.SetColumnWidth(iMemNumField, iColWStdr)
+                                'End If
+
                             Else
 
                                 Dim rColWTxtDest = lstColSize(iMemNumField)
