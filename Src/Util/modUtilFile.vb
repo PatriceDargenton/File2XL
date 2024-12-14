@@ -431,6 +431,7 @@ Retry:
             p.StartInfo = New ProcessStartInfo(sFilePath)
             p.StartInfo.Arguments = sArguments
             If bMaximized Then p.StartInfo.WindowStyle = ProcessWindowStyle.Maximized
+            p.StartInfo.UseShellExecute = True ' 14/12/2024
             p.Start()
         End Using
 
