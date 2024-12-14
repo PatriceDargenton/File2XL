@@ -410,6 +410,7 @@ Public Class clsFile2XL
                             ' 20/05/2017
                             dTimeStart = Now()
                             Dim rColWTxt# = m_sh.GetColumnWidth(iNumField0 - 1)
+                            rColWTxt = rColWTxt * 1.03 ' 14/12/2024 DotNetCore.NPOI : 3% wider
                             dTimeEnd = Now()
                             ts = dTimeEnd - dTimeStart
                             rTimeGetColumnWidth += ts.TotalSeconds
@@ -420,12 +421,14 @@ Public Class clsFile2XL
 
                             If iColWTxt < iMinColumnWidth Then
                                 iColWTxt = iMinColumnWidth
-                                m_sh.SetColumnWidth(iNumField0 - 1, rColWTxt)
+                                'm_sh.SetColumnWidth(iNumField0 - 1, rColWTxt)
                             End If
                             If iColWTxt > iMaxColumnWidth Then
                                 iColWTxt = iMaxColumnWidth
-                                m_sh.SetColumnWidth(iNumField0 - 1, rColWTxt)
+                                'm_sh.SetColumnWidth(iNumField0 - 1, rColWTxt)
                             End If
+                            ' 14/12/2024 DotNetCore.NPOI : 3% wider
+                            m_sh.SetColumnWidth(iNumField0 - 1, rColWTxt)
 
                             dTimeEnd = Now()
                             ts = dTimeEnd - dTimeStart

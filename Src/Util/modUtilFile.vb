@@ -152,7 +152,8 @@ Retry:
         Dim bom = New Byte(3) {}
         Using file = New IO.FileStream(filename, IO.FileMode.Open,
                 IO.FileAccess.Read, IO.FileShare.ReadWrite) ' 05/01/2018 Need only read-only access, not write access
-            file.Read(bom, 0, 4)
+            'file.Read(bom, 0, 4)
+            file.ReadExactly(bom) ' CA2022
         End Using
 
         ' Analyze the BOM
@@ -204,7 +205,8 @@ Retry:
         Dim bom = New Byte(3) {}
         Using file = New IO.FileStream(filename, IO.FileMode.Open,
                 IO.FileAccess.Read, IO.FileShare.ReadWrite) ' 05/01/2018 Need only read-only access, not write access
-            file.Read(bom, 0, 4)
+            'file.Read(bom, 0, 4)
+            file.ReadExactly(bom) ' CA2022
         End Using
 
         ' Analyze the BOM
