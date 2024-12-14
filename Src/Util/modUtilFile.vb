@@ -184,13 +184,13 @@ Retry:
         If bom(0) = &HDD AndAlso bom(1) = &H73 AndAlso bom(2) = &H66 AndAlso bom(3) = &H73 Then
             'Return Encoding.UTF-EBCDIC
         End If
-        If bom(0) = &H2B AndAlso bom(1) = &H2F AndAlso bom(2) = &H76 AndAlso
-            (bom(3) = &H38 OrElse
-             bom(3) = &H39 OrElse
-             bom(3) = &H2B OrElse
-             bom(3) = &H2F) Then
-            Return Encoding.UTF7
-        End If
+        'If bom(0) = &H2B AndAlso bom(1) = &H2F AndAlso bom(2) = &H76 AndAlso
+        '    (bom(3) = &H38 OrElse
+        '     bom(3) = &H39 OrElse
+        '     bom(3) = &H2B OrElse
+        '     bom(3) = &H2F) Then
+        '    Return Encoding.UTF7
+        'End If
 
         Return Encoding.ASCII
 
@@ -208,9 +208,9 @@ Retry:
         End Using
 
         ' Analyze the BOM
-        If bom(0) = &H2B AndAlso bom(1) = &H2F AndAlso bom(2) = &H76 Then
-            Return Encoding.UTF7
-        End If
+        'If bom(0) = &H2B AndAlso bom(1) = &H2F AndAlso bom(2) = &H76 Then
+        '    Return Encoding.UTF7
+        'End If
         If bom(0) = &HEF AndAlso bom(1) = &HBB AndAlso bom(2) = &HBF Then
             Return Encoding.UTF8
         End If
