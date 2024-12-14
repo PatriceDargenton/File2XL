@@ -401,8 +401,8 @@ Public Class clsFile2XL
                         Else
 
                             dTimeStart = Now()
-                            'm_sh.AutoSizeColumn(iNumField0 - 1) ' AutoFit
-                            m_sh.AutoSizeColumn(iNumField0 - 1, useMergedCells:=False, maxRows:=100) ' 07/12/2024
+                            m_sh.AutoSizeColumn(iNumField0 - 1) ' AutoFit
+                            'm_sh.AutoSizeColumn(iNumField0 - 1, useMergedCells:=False, maxRows:=100) ' 07/12/2024
                             dTimeEnd = Now()
                             ts = dTimeEnd - dTimeStart
                             rTimeAutoSizeColumn += ts.TotalSeconds
