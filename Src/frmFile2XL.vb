@@ -24,7 +24,6 @@
 ' File frmFile2XL.vb : Main form
 ' ------------------
 
-Imports System.Runtime.Hosting
 Imports System.Text ' for StringBuilder
 
 Public Class frmFile2XL
@@ -60,11 +59,12 @@ Public Class frmFile2XL
 
     Private Sub Initialization()
 
-        SetMsgTitle(sMsgTitle)
-        Dim sTxt$ = sMsgTitle & " " & sAppVersion & " (" & sAppDate & ")"
+        'Dim sTxt$ = sMsgTitle & " " & sAppVersion & " (" & sAppDate & ")"
+        Dim sTxt$ = sAppProduct & " " & sAppVersion & " (" & sAppDate & ") " & sAppName
         If bDebug Then sTxt &= " - Debug"
         'If Not is64BitProcess() Then sTxt &= " - 32 bits"
         Me.Text = sTxt
+        SetMsgTitle(sTxt)
 
         Me.cmdCancel.Visible = False
         Me.cmdStart.Visible = False
@@ -80,18 +80,12 @@ Public Class frmFile2XL
 
         CheckContextMenu()
 
-        ShowLongMessage("")
-        ShowMessage("Checking dll files...")
-        If Not bFileExists(Application.StartupPath & "\ICSharpCode.SharpZipLib.dll", bPrompt:=True) Then GoTo EndSub
-        If Not bFileExists(Application.StartupPath & "\NPOI.dll", bPrompt:=True) Then GoTo EndSub
-        If Not bFileExists(Application.StartupPath & "\NPOI.OOXML.dll", bPrompt:=True) Then GoTo EndSub
-        If Not bFileExists(Application.StartupPath & "\NPOI.OpenXml4Net.dll", bPrompt:=True) Then GoTo EndSub
-        If Not bFileExists(Application.StartupPath & "\NPOI.OpenXmlFormats.dll", bPrompt:=True) Then GoTo EndSub
-
         Dim sArg0$ = Microsoft.VisualBasic.Interaction.Command
         'MsgBox("File2XL : " & sArg0)
         If bDebug Then
             sArg0 = Application.StartupPath & "\Tmp\Test256Col.dat"
+            'sArg0 = Application.StartupPath & "\Tmp\Standard_sheet.csv"
+            sArg0 = Application.StartupPath & "\Tmp\Test.csv"
         Else
             Me.cmdCreateTestFiles.Visible = False
         End If
@@ -274,12 +268,13 @@ EndSub:
         Else
 
             ' Wait and quit Excel
-
-            While Not bFileIsAvailable(sPath, bNonExistentOk:=True, bCheckForSlowRead:=True)
-                ShowMessage("Waiting for the workbook to be closed...")
-                If m_delegMsg.m_bCancel Then Exit While
-                Threading.Thread.Sleep(500)
-            End While
+            If bRelease Then
+                While Not bFileIsAvailable(sPath, bNonExistentOk:=True, bCheckForSlowRead:=True)
+                    ShowMessage("Waiting for the workbook to be closed...")
+                    If m_delegMsg.m_bCancel Then Exit While
+                    Threading.Thread.Sleep(500)
+                End While
+            End If
 
         End If
 

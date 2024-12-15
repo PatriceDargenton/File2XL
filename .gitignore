@@ -53,16 +53,15 @@ Temporary Items
 /Bak
 /packages
 
-*.suo
 *.bat
 *.ini
 *.html
 *.pdb
 
-/File2XL.exe
 /File2XL.xml
 /File2XL.log
 
-/ICSharpCode.SharpZipLib.dll
-/NPOI.OpenXml4Net.dll
-/NPOI.OpenXmlFormats.dll
+/packages
+
+*.suo
+/File2XL.vbproj.user

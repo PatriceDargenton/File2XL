@@ -9,9 +9,11 @@ Public Class SortDic(Of TKey, TValue) : Inherits Dictionary(Of TKey, TValue)
 
     Sub New()
     End Sub
-    Protected Sub New(info As SerializationInfo, context As StreamingContext)
-        MyBase.New(info, context)
-    End Sub
+
+    ' SYSLIB0051: remove this constructor: obsolete
+    'Protected Sub New(info As SerializationInfo, context As StreamingContext)
+    '    MyBase.New(info, context)
+    'End Sub
 
     Public Function Sort(Optional sSorting$ = "") As TValue()
 

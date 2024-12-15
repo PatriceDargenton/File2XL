@@ -152,7 +152,8 @@ Retry:
         Dim bom = New Byte(3) {}
         Using file = New IO.FileStream(filename, IO.FileMode.Open,
                 IO.FileAccess.Read, IO.FileShare.ReadWrite) ' 05/01/2018 Need only read-only access, not write access
-            file.Read(bom, 0, 4)
+            'file.Read(bom, 0, 4)
+            file.ReadExactly(bom) ' CA2022
         End Using
 
         ' Analyze the BOM
@@ -184,13 +185,13 @@ Retry:
         If bom(0) = &HDD AndAlso bom(1) = &H73 AndAlso bom(2) = &H66 AndAlso bom(3) = &H73 Then
             'Return Encoding.UTF-EBCDIC
         End If
-        If bom(0) = &H2B AndAlso bom(1) = &H2F AndAlso bom(2) = &H76 AndAlso
-            (bom(3) = &H38 OrElse
-             bom(3) = &H39 OrElse
-             bom(3) = &H2B OrElse
-             bom(3) = &H2F) Then
-            Return Encoding.UTF7
-        End If
+        'If bom(0) = &H2B AndAlso bom(1) = &H2F AndAlso bom(2) = &H76 AndAlso
+        '    (bom(3) = &H38 OrElse
+        '     bom(3) = &H39 OrElse
+        '     bom(3) = &H2B OrElse
+        '     bom(3) = &H2F) Then
+        '    Return Encoding.UTF7
+        'End If
 
         Return Encoding.ASCII
 
@@ -204,13 +205,14 @@ Retry:
         Dim bom = New Byte(3) {}
         Using file = New IO.FileStream(filename, IO.FileMode.Open,
                 IO.FileAccess.Read, IO.FileShare.ReadWrite) ' 05/01/2018 Need only read-only access, not write access
-            file.Read(bom, 0, 4)
+            'file.Read(bom, 0, 4)
+            file.ReadExactly(bom) ' CA2022
         End Using
 
         ' Analyze the BOM
-        If bom(0) = &H2B AndAlso bom(1) = &H2F AndAlso bom(2) = &H76 Then
-            Return Encoding.UTF7
-        End If
+        'If bom(0) = &H2B AndAlso bom(1) = &H2F AndAlso bom(2) = &H76 Then
+        '    Return Encoding.UTF7
+        'End If
         If bom(0) = &HEF AndAlso bom(1) = &HBB AndAlso bom(2) = &HBF Then
             Return Encoding.UTF8
         End If
@@ -431,6 +433,7 @@ Retry:
             p.StartInfo = New ProcessStartInfo(sFilePath)
             p.StartInfo.Arguments = sArguments
             If bMaximized Then p.StartInfo.WindowStyle = ProcessWindowStyle.Maximized
+            p.StartInfo.UseShellExecute = True ' 14/12/2024
             p.Start()
         End Using
 
