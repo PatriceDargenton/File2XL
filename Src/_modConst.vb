@@ -4,7 +4,7 @@
 
 Module _modConst
 
-    Public Const sAppDate$ = "14/12/2024"
+    Public Const sAppDate$ = "15/12/2024"
 
 #If DEBUG Then
     Public Const bDebug As Boolean = True
@@ -18,8 +18,9 @@ Module _modConst
         My.Application.Info.Version.Major & "." &
         My.Application.Info.Version.Minor & My.Application.Info.Version.Build
 
+    Public ReadOnly sAppProduct$ = My.Application.Info.ProductName
     Public ReadOnly sAppName$ = My.Application.Info.Title
-    Public ReadOnly sMsgTitle$ = sAppName
+    Public sMsgTitle$ = sAppProduct & " : " & sAppName
 
     Public Const iDisplayRate% = 1000
     Public Const sMsgDone$ = "Done."

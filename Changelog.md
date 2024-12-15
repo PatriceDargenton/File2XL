@@ -2,11 +2,14 @@
 
 All notable changes to the File2XL project will be documented in this file.
 
-## [Unreleased]
+## [1.10] - 15/12/2024
 ### Fixed
-- AutoSizeColumn: very slow for standard sheet, but not for text sheet: so use text sheet sizes for both;
-- maxRows option for AutoSizeColumn: coming soon...
-- packages update.
+- AutoSizeColumn: it was slow for standard sheet, but not for text sheet: so use text sheet sizes for both.
+
+### Changed
+- NPOI 2.7.2 -> DotNetCore.NPOI 1.2.3: Faster! (maxRows is now available in NPOI for xls but not for xlsx; with DotNetCore.NPOI, there is no need to optimize the speed, it is already optimized);
+- NPOI.dll (2.2.1.1 with private AutoSizeColumn optimization for xls and xlsx: maxRows) -> Nuget version;
+- .Net472 -> .Net9.0.
 
 ## [1.07] - 01/05/2023
 ### Added

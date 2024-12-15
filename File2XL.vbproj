@@ -6,6 +6,9 @@
     <StartupObject>File2XL.My.MyApplication</StartupObject>
     <UseWindowsForms>true</UseWindowsForms>
     <MyType>WindowsForms</MyType>
+    <Product>File2XL</Product>
+    <AssemblyTitle>Open a csv file into MS-Excel</AssemblyTitle>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

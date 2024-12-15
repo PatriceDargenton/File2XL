@@ -59,11 +59,12 @@ Public Class frmFile2XL
 
     Private Sub Initialization()
 
-        SetMsgTitle(sMsgTitle)
-        Dim sTxt$ = sMsgTitle & " " & sAppVersion & " (" & sAppDate & ")"
+        'Dim sTxt$ = sMsgTitle & " " & sAppVersion & " (" & sAppDate & ")"
+        Dim sTxt$ = sAppProduct & " " & sAppVersion & " (" & sAppDate & ") " & sAppName
         If bDebug Then sTxt &= " - Debug"
         'If Not is64BitProcess() Then sTxt &= " - 32 bits"
         Me.Text = sTxt
+        SetMsgTitle(sTxt)
 
         Me.cmdCancel.Visible = False
         Me.cmdStart.Visible = False

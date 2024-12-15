@@ -48,6 +48,8 @@ There are only two multiple delimiters (not configurable): "," and ";"
 
 Only a quick parsing is performed (splitting with "," or ";"), not a deep parsing. If a deep parsing is required (like the slow one that Excel use in his Text Import Wizard), there is a second context menu to choose for example comma (,) instead of ",": "Open in MS-Excel using File2XL (single delimiter)", otherwise the default context menu gives chance to choose the multiple delimiter ",".
 
+The SingleDelimiter menu means that we do not add weight to the separators "," and ";" to favor the comma separator (,) if that is sufficient. Without this SingleDelimiter menu (normal menu), we add weight (3 characters therefore 3 times more weight) to the multiple separators.
+
 Example of a file that is generated with multiple delimiter: phpmyadmin csv export (null value doesn't have "", so you should use the second context menu for it: single delimiter, if you have nullable fields).
 
 ## Settings
@@ -57,18 +59,9 @@ There is no user interface to configure settings, simply edit the config. file i
 # Projects
 - Options menu: before loading the file in Excel, show a panel to set encoding option, and to set delimiter option (instead of the 'single delimiter' menu);
 - Numeric field: count how many decimal digits of precision are required (actually, no decimal is shown by default, but you can change it afterward in Excel as you want);
-- Date field: show date (and time) fields in formatted and colored cells in the standard sheet;
-- Event handler for the writing of the Excel workbook (which may be cancelled) for large files: suggestion have been submitted to NPOI team but not yet implemented (possible way to do it: counting every row or every line of each sheet to be written).
+- Date field: show date (and time) fields in formatted and colored cells in the standard sheet.
 
 
 # Versions
 
 See [Changelog.md](Changelog.md)
-
-
-# Links
-- Library used: [NPOI](https://github.com/tonyqus/npoi) (2.2.1.0 version, may 2016)  
-  NPOI: a .NET library that can read/write Office formats without Microsoft Office installed. No COM+, no interop.  
-  Only one add (2.2.1.1): GetColumnWidth: iNumRow++; if (iNumRow > iNbRowMax) break;  
-  const int iNbRowMax = 100;  
-  in order to perform a fast column autosize based on only the top 100 lines (suggestion have been submitted and approved by NPOI team, and it's being tested, see [NuGet branch](https://github.com/PatriceDargenton/File2XL/tree/NuGet)).
